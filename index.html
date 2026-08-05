@@ -58,6 +58,7 @@
                 <button class="nav-tab nav-tab-active" id="nav-dashboard" data-label="Halaman Depan" onclick="switchTab('dashboard')"><span class="nav-emoji">🏠</span> Halaman Depan</button>
                 <button class="nav-tab" id="nav-gallery" data-label="Dinding Kenangan" onclick="switchTab('gallery')"><span class="nav-emoji">📷</span> Dinding Kenangan</button>
                 <button class="nav-tab" id="nav-diary" data-label="Jurnal Harian" onclick="switchTab('diary')"><span class="nav-emoji">📝</span> Jurnal Harian</button>
+                <button class="nav-tab" id="nav-quiz" data-label="Kuis Pasangan" onclick="switchTab('quiz')"><span class="nav-emoji">🧩</span> Kuis Pasangan</button>
                 <button class="nav-tab" id="nav-planner" data-label="Rencana & Mimpi" onclick="switchTab('planner')"><span class="nav-emoji">🗺️</span> Rencana &amp; Mimpi</button>
                 <button class="nav-tab" id="nav-settings" data-label="Pengaturan" onclick="switchTab('settings')"><span class="nav-emoji">⚙️</span> Pengaturan</button>
             </nav>
@@ -118,6 +119,22 @@
             </div>
             <button class="btn-tape btn-tape-teal" onclick="openDiaryModal()" style="margin-bottom:18px;">+ Tulis Halaman Baru</button>
             <div class="diary-list" id="diary-list"></div>
+        </section>
+
+        <!-- TAB: QUIZ -->
+        <section id="tab-quiz" class="tab-page hidden">
+            <div class="page-title-row">
+                <h2>Kuis Pasangan</h2>
+                <span class="page-sub">jawab sendiri-sendiri, baru lihat seberapa mirip jawaban kalian</span>
+            </div>
+            <div class="torn-panel">
+                <div class="page-title-row">
+                    <h3>Seberapa Kenal Kita? 🧩</h3>
+                    <button class="btn-tape" onclick="openQuizModal()">+ Tambah Pertanyaan</button>
+                </div>
+                <p class="quiz-score hidden" id="quiz-score"></p>
+                <div id="quiz-list"></div>
+            </div>
         </section>
 
         <!-- TAB: PLANNER -->
@@ -211,7 +228,13 @@
 <div id="polaroid-modal" class="modal-overlay hidden">
     <div class="modal-box">
         <h3>Tempel Foto Baru 📷</h3>
-        <div class="settings-field" style="margin-bottom:10px;"><label>Tautan Foto (URL)</label><input id="polaroid-img-input" type="text" placeholder="https://..."></div>
+        <div class="settings-field" style="margin-bottom:6px;">
+            <label>Upload Foto dari Perangkat</label>
+            <input id="polaroid-file-input" type="file" accept="image/*" onchange="handlePolaroidFileSelect(this)">
+            <p class="hint-text-light" id="polaroid-upload-status"></p>
+            <img id="polaroid-preview" class="polaroid-upload-preview hidden" alt="Pratinjau foto">
+        </div>
+        <div class="settings-field" style="margin-bottom:10px;"><label>Atau Tempel Link URL (opsional)</label><input id="polaroid-img-input" type="text" placeholder="https://..."></div>
         <div class="settings-field" style="margin-bottom:10px;"><label>Caption</label><input id="polaroid-caption-input" type="text" placeholder="Tulis cerita singkat di balik foto ini"></div>
         <div class="settings-field" style="margin-bottom:10px;"><label>Tanggal</label><input id="polaroid-date-input" type="date"></div>
         <div class="settings-field"><label>Warna Washi Tape</label>
@@ -287,6 +310,17 @@
     </div>
 </div>
 
+<div id="quiz-modal" class="modal-overlay hidden">
+    <div class="modal-box">
+        <h3>Tambah Pertanyaan Kuis 🧩</h3>
+        <div class="settings-field"><label>Pertanyaannya apa?</label><input id="quiz-question-input" type="text" placeholder="Misal: Film favoritku adalah..."></div>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeQuizModal()">Batal</button>
+            <button class="btn-tape" onclick="saveQuizQuestion()">Simpan</button>
+        </div>
+    </div>
+</div>
+
 <div id="capsule-reader-modal" class="modal-overlay hidden">
     <div class="modal-box">
         <h3>Surat untuk <span id="capsule-reader-target">-</span> 💌</h3>
@@ -304,6 +338,7 @@
 <script src="./js/utils.js"></script>
 <script src="./js/modules/gallery.js"></script>
 <script src="./js/modules/diary.js"></script>
+<script src="./js/modules/quiz.js"></script>
 <script src="./js/modules/planner.js"></script>
 <script src="./js/app.js"></script>
 </body>
