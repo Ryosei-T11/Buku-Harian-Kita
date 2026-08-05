@@ -165,6 +165,8 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--teal-seal);
 .nav-emoji { font-size: 1.05rem; }
 
 .sidebar-footer { font-size: 0.62rem; color: #8a7657; padding: 0 8px; line-height: 1.5; }
+.cloud-status { display: inline-block; margin-bottom: 4px; color: #9fd6bd; font-weight: bold; }
+.cloud-status-off { color: #d8a657; }
 
 #content-area { flex: 1; margin-left: 230px; padding: 26px 30px 60px; min-height: 100vh; }
 
