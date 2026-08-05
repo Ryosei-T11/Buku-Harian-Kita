@@ -2,6 +2,11 @@
 // DINDING KENANGAN (Polaroid Gallery)
 // =====================================================
 
+const MAX_IMAGE_DIMENSION = 900; // px, sisi terpanjang setelah dikompres
+const IMAGE_QUALITY = 0.68;
+
+let pendingUploadDataUrl = null;
+
 function renderPolaroids() {
     const wall = document.getElementById('polaroid-wall');
     wall.innerHTML = '';
@@ -27,17 +32,68 @@ function renderPolaroids() {
     });
 }
 
-function openPolaroidModal() { document.getElementById('polaroid-modal').classList.remove('hidden'); }
+function openPolaroidModal() {
+    pendingUploadDataUrl = null;
+    document.getElementById('polaroid-file-input').value = '';
+    document.getElementById('polaroid-preview').classList.add('hidden');
+    document.getElementById('polaroid-upload-status').innerText = '';
+    document.getElementById('polaroid-modal').classList.remove('hidden');
+}
 function closePolaroidModal() { document.getElementById('polaroid-modal').classList.add('hidden'); }
 
+// Mengompres & mengubah ukuran gambar di browser sebelum disimpan ke cloud,
+// supaya tidak terlalu berat dikirim/diunduh berulang kali.
+function handlePolaroidFileSelect(fileInput) {
+    const file = fileInput.files && fileInput.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+        showToast('Bukan Gambar', 'Pilih file foto (jpg/png/webp) ya.');
+        return;
+    }
+
+    document.getElementById('polaroid-upload-status').innerText = 'Memproses foto...';
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+            let width = img.width;
+            let height = img.height;
+            if (width > height && width > MAX_IMAGE_DIMENSION) {
+                height = Math.round(height * (MAX_IMAGE_DIMENSION / width));
+                width = MAX_IMAGE_DIMENSION;
+            } else if (height > MAX_IMAGE_DIMENSION) {
+                width = Math.round(width * (MAX_IMAGE_DIMENSION / height));
+                height = MAX_IMAGE_DIMENSION;
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            pendingUploadDataUrl = canvas.toDataURL('image/jpeg', IMAGE_QUALITY);
+
+            const preview = document.getElementById('polaroid-preview');
+            preview.src = pendingUploadDataUrl;
+            preview.classList.remove('hidden');
+            const sizeKb = Math.round(pendingUploadDataUrl.length / 1024);
+            document.getElementById('polaroid-upload-status').innerText = `Siap ditempel (± ${sizeKb} KB setelah dikompres).`;
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
 function savePolaroid() {
-    const img = document.getElementById('polaroid-img-input').value.trim();
+    const urlInput = document.getElementById('polaroid-img-input').value.trim();
+    const img = pendingUploadDataUrl || urlInput;
     const caption = document.getElementById('polaroid-caption-input').value.trim();
     const date = document.getElementById('polaroid-date-input').value || toLocalDateKey(new Date());
     const tape = document.getElementById('polaroid-tape-input').value;
 
     if (!img || !caption) {
-        showToast('Belum Lengkap', 'Isi tautan foto dan captionnya dulu ya.');
+        showToast('Belum Lengkap', 'Upload foto (atau tempel link) dan isi captionnya dulu ya.');
         return;
     }
 
@@ -47,6 +103,7 @@ function savePolaroid() {
     closePolaroidModal();
     document.getElementById('polaroid-img-input').value = '';
     document.getElementById('polaroid-caption-input').value = '';
+    pendingUploadDataUrl = null;
     showToast('Tertempel! 📌', 'Kenangan baru sudah nempel di dinding.');
 }
 
