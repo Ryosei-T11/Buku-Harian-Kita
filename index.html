@@ -62,7 +62,10 @@
                 <button class="nav-tab" id="nav-settings" data-label="Pengaturan" onclick="switchTab('settings')"><span class="nav-emoji">⚙️</span> Pengaturan</button>
             </nav>
         </div>
-        <p class="sidebar-footer">Setiap halaman di sini disimpan langsung di browser kalian berdua. 🤍</p>
+        <p class="sidebar-footer">
+            <span id="cloud-status" class="cloud-status">☁️ Menghubungkan...</span><br>
+            Data tersinkron otomatis ke pasanganmu secara real-time. 🤍
+        </p>
     </aside>
 
     <main id="content-area">
@@ -294,6 +297,9 @@
     </div>
 </div>
 
+<!-- SDK Firebase versi stabil (v8) untuk sinkronisasi cloud real-time -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script src="./js/state.js"></script>
 <script src="./js/utils.js"></script>
 <script src="./js/modules/gallery.js"></script>
