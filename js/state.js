@@ -49,6 +49,16 @@ let appState = {
     ],
     calendarEvents: [
         { id: 1, title: 'Hari Jadian Kita', date: '2026-07-22', desc: 'Jangan lupa dirayakan setiap tahun 🎉' }
+    ],
+    quizAnswers: [
+        { id: 1, question: 'Makanan favoritku adalah...', creatorAnswer: null, partnerAnswer: null },
+        { id: 2, question: 'Kalau libur panjang, aku maunya kita...', creatorAnswer: null, partnerAnswer: null },
+        { id: 3, question: 'Kebiasaan lucu/anehku yang mungkin belum kamu sadari...', creatorAnswer: null, partnerAnswer: null },
+        { id: 4, question: 'Kalau harus pilih satu superpower, aku pilih...', creatorAnswer: null, partnerAnswer: null },
+        { id: 5, question: 'Tempat yang paling ingin aku kunjungi bareng kamu...', creatorAnswer: null, partnerAnswer: null },
+        { id: 6, question: 'Lagu yang selalu bikin aku ingat kamu...', creatorAnswer: null, partnerAnswer: null },
+        { id: 7, question: 'Hal kecil yang bikin aku jatuh cinta sama kamu...', creatorAnswer: null, partnerAnswer: null },
+        { id: 8, question: 'Julukan yang aku pengen kamu panggil ke aku...', creatorAnswer: null, partnerAnswer: null }
     ]
 };
 
@@ -69,6 +79,7 @@ function normalizeState(data) {
     data.bucketList = Array.isArray(data.bucketList) ? data.bucketList : [];
     data.capsuleLetters = Array.isArray(data.capsuleLetters) ? data.capsuleLetters : [];
     data.calendarEvents = Array.isArray(data.calendarEvents) ? data.calendarEvents : [];
+    data.quizAnswers = Array.isArray(data.quizAnswers) ? data.quizAnswers : [];
     return data;
 }
 
