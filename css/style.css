@@ -282,6 +282,31 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--teal-seal);
 .capsule-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
 .capsule-delete { color: var(--ink-soft); font-size: 0.7rem; }
 
+/* ---------- UPLOAD FOTO ---------- */
+.hint-text-light { font-size: 0.65rem; color: var(--ink-soft); margin: 6px 0 0; }
+.polaroid-upload-preview { width: 100%; max-height: 160px; object-fit: cover; border-radius: 6px; margin-top: 8px; box-shadow: 0 4px 10px var(--shadow-soft); }
+input[type="file"] { padding: 8px; font-size: 0.75rem; }
+
+/* ---------- KUIS PASANGAN ---------- */
+.quiz-score { background: var(--tape-mustard); color: #3a2b1c; font-family: 'Caveat', cursive; font-size: 1.3rem; text-align: center; padding: 10px; border-radius: 8px; margin-bottom: 16px; }
+.quiz-card { background: var(--paper-cream); border-radius: 8px; padding: 16px 18px; margin-bottom: 14px; box-shadow: 0 5px 12px var(--shadow-soft); }
+.quiz-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.quiz-card-head h4 { font-size: 1.25rem; flex: 1; }
+.quiz-delete { color: var(--ink-soft); font-size: 0.7rem; }
+.quiz-delete:hover { color: var(--tape-rose-dark); }
+.quiz-answer-form { display: flex; gap: 8px; margin-top: 10px; }
+.quiz-answer-form input { flex: 1; }
+.quiz-my-answer { font-size: 0.85rem; margin: 10px 0 4px; }
+.quiz-waiting { font-size: 0.75rem; color: var(--ink-soft); font-style: italic; margin: 0 0 8px; }
+.quiz-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+.quiz-compare-col { background: var(--paper-cream-dark); border-radius: 6px; padding: 10px; }
+.quiz-compare-label { font-size: 0.62rem; text-transform: uppercase; color: var(--tape-rose-dark); letter-spacing: 0.03em; display: block; margin-bottom: 4px; }
+.quiz-compare-col p { font-size: 0.82rem; margin: 0; }
+.quiz-match { font-family: 'Caveat', cursive; font-size: 1.1rem; margin: 10px 0 4px; }
+.quiz-match-yes { color: var(--teal-seal); }
+.quiz-match-no { color: var(--tape-rose-dark); }
+.quiz-edit-btn { font-size: 0.65rem; color: var(--ink-soft); text-decoration: underline; margin-top: 4px; }
+
 /* ---------- SETTINGS ---------- */
 .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 18px; }
 .settings-field label { display: block; font-size: 0.68rem; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 6px; letter-spacing: 0.03em; }
