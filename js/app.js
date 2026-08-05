@@ -9,9 +9,9 @@ function checkDigitalKey() {
     const real = appState.settings.secretAnswer.toLowerCase();
 
     if (given === real) {
-        localStorage.setItem('buku_harian_role', role);
-        appState.unlocked = true;
-        saveState();
+        localStorage.setItem(SESSION_ROLE_KEY, role);
+        localStorage.setItem(SESSION_UNLOCKED_KEY, 'true');
+        localStorage.setItem(SESSION_LAST_ANSWER_KEY, real);
         document.getElementById('lock-screen').classList.add('lock-fade-out');
         setTimeout(() => {
             document.getElementById('lock-screen').classList.add('hidden');
@@ -28,7 +28,7 @@ function checkDigitalKey() {
 }
 
 function getMyRole() {
-    return localStorage.getItem('buku_harian_role') || 'creator';
+    return localStorage.getItem(SESSION_ROLE_KEY) || 'creator';
 }
 
 function getProfiles() {
@@ -154,9 +154,12 @@ function saveSettings() {
     if (newAnswer) s.secretAnswer = newAnswer.toLowerCase();
 
     saveState();
+    // Perbarui jawaban terakhir yang diketahui perangkat ini supaya tidak ter-auto-logout
+    // oleh perubahannya sendiri saat data balik lagi dari Firebase.
+    localStorage.setItem(SESSION_LAST_ANSWER_KEY, s.secretAnswer.toLowerCase());
     injectRoleLabels();
     renderDashboard();
-    showToast('Tersimpan 📌', 'Pengaturan buku harian sudah diperbarui.');
+    showToast('Tersimpan 📌', 'Pengaturan buku harian sudah diperbarui & disinkronkan ke cloud.');
     fillSettingsForm();
 }
 
@@ -169,7 +172,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('lock-screen-question').innerText = `"${appState.settings.secretQuestion}"`;
     injectRoleLabels();
 
-    if (appState.unlocked && localStorage.getItem('buku_harian_role')) {
+    if (localStorage.getItem(SESSION_UNLOCKED_KEY) === 'true') {
+        localStorage.setItem(SESSION_LAST_ANSWER_KEY, appState.settings.secretAnswer.toLowerCase());
         document.getElementById('lock-screen').classList.add('hidden');
         document.getElementById('main-app').classList.remove('hidden');
         initApp();
