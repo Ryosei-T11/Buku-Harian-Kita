@@ -357,6 +357,25 @@ input[type="file"] { padding: 8px; font-size: 0.75rem; }
 .quiz-match-no { color: var(--tape-rose-dark); }
 .quiz-edit-btn { font-size: 0.65rem; color: var(--ink-soft); text-decoration: underline; margin-top: 4px; }
 
+/* ---------- PUISI KITA ---------- */
+.poem-list { display: flex; flex-direction: column; gap: 18px; }
+.poem-card {
+    background: linear-gradient(180deg, var(--paper-cream), var(--paper-cream-dark));
+    border-radius: 8px; padding: 26px 24px; text-align: center; position: relative;
+    box-shadow: 0 8px 18px var(--shadow-soft);
+    border: 1px solid rgba(0,0,0,0.06);
+}
+.poem-card::before, .poem-card::after {
+    content: '❦'; color: var(--tape-rose-dark); opacity: 0.5; font-size: 1rem; display: block; margin: 0 auto 6px;
+}
+.poem-card::after { margin: 10px auto 0; }
+.poem-title { font-size: 1.7rem; margin-bottom: 4px; }
+.poem-dedication { font-size: 0.78rem; color: var(--tape-rose-dark); font-style: italic; margin-bottom: 14px; }
+.poem-body { font-family: 'Caveat', cursive; font-size: 1.3rem; line-height: 1.75; white-space: pre-wrap; color: var(--ink); margin: 0 0 14px; }
+.poem-meta { font-size: 0.68rem; color: var(--ink-soft); }
+.poem-delete { position: absolute; top: 10px; right: 12px; color: var(--ink-soft); font-size: 0.75rem; }
+.poem-delete:hover { color: var(--tape-rose-dark); }
+
 /* ---------- SETTINGS ---------- */
 .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 18px; }
 .settings-field label { display: block; font-size: 0.68rem; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 6px; letter-spacing: 0.03em; }
