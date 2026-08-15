@@ -93,6 +93,14 @@ function saveState() {
 }
 
 // 4. DENGARKAN PERUBAHAN CLOUD SECARA REAL-TIME (dari perangkat manapun)
+function hideBootLoading() {
+    const el = document.getElementById('boot-loading');
+    if (el) el.classList.add('boot-loading-hide');
+}
+// Jaring pengaman: kalau Firebase lambat/tidak merespons, jangan biarkan
+// layar loading tertahan selamanya.
+setTimeout(hideBootLoading, 4000);
+
 database.ref(CLOUD_NODE).on('value', (snapshot) => {
     try {
         let cloudData = snapshot.val();
@@ -111,6 +119,7 @@ database.ref(CLOUD_NODE).on('value', (snapshot) => {
                 console.warn('Cloud terdeteksi kembali ke default, memulihkan data kustom dari cadangan lokal...');
                 appState = normalizeState(localBackup);
                 saveState();
+                hideBootLoading();
                 return;
             }
 
@@ -149,9 +158,11 @@ database.ref(CLOUD_NODE).on('value', (snapshot) => {
     } catch (error) {
         console.error('Gagal memproses data dari Firebase:', error);
     }
+    hideBootLoading();
 }, (error) => {
     console.error('Gagal membaca dari Firebase:', error);
     if (typeof showToast === 'function') showToast('Tidak Terhubung ☁️', 'Gagal memuat data dari cloud. Periksa koneksi internetmu.');
+    hideBootLoading();
 });
 
 // 5. INDIKATOR STATUS KONEKSI CLOUD (ditampilkan kecil di sidebar)
