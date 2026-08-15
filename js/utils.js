@@ -51,3 +51,32 @@ function escapeHtml(str) {
     div.innerText = str == null ? '' : str;
     return div.innerHTML;
 }
+
+// ---------- KONFETI ANNIVERSARY ----------
+const CONFETTI_COLORS = ['#c1666b', '#d8a657', '#3f6e60', '#f7f0dc', '#a84e53'];
+
+function triggerAnniversaryConfetti() {
+    const todayKey = toLocalDateKey(new Date());
+    const flagKey = 'buku_harian_confetti_' + todayKey;
+    if (sessionStorage.getItem(flagKey)) return; // sudah tampil hari ini, jangan ulang tiap render
+    sessionStorage.setItem(flagKey, 'true');
+
+    const container = document.createElement('div');
+    container.className = 'confetti-container';
+    document.body.appendChild(container);
+
+    const pieceCount = 60;
+    for (let i = 0; i < pieceCount; i++) {
+        const piece = document.createElement('span');
+        piece.className = 'confetti-piece';
+        piece.style.left = `${Math.random() * 100}vw`;
+        piece.style.background = CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)];
+        piece.style.animationDuration = `${2.2 + Math.random() * 1.8}s`;
+        piece.style.animationDelay = `${Math.random() * 0.6}s`;
+        piece.style.setProperty('--rot', `${(Math.random() * 360) | 0}deg`);
+        container.appendChild(piece);
+    }
+
+    setTimeout(() => container.remove(), 4500);
+    if (typeof showToast === 'function') showToast('Selamat Hari Jadi! 🎉', 'Semoga makin sayang setiap harinya.');
+}
