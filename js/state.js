@@ -59,6 +59,16 @@ let appState = {
         { id: 6, question: 'Lagu yang selalu bikin aku ingat kamu...', creatorAnswer: null, partnerAnswer: null },
         { id: 7, question: 'Hal kecil yang bikin aku jatuh cinta sama kamu...', creatorAnswer: null, partnerAnswer: null },
         { id: 8, question: 'Julukan yang aku pengen kamu panggil ke aku...', creatorAnswer: null, partnerAnswer: null }
+    ],
+    poems: [
+        {
+            id: 1,
+            author: 'creator',
+            date: '2026-07-22',
+            title: 'Halaman Pertama',
+            dedication: 'Untuk Wian',
+            content: 'Di setiap baris yang kutulis,\nada namamu yang terselip diam-diam.\nBuku ini bukan cuma kertas,\ntapi rumah kecil untuk kita berdua.'
+        }
     ]
 };
 
@@ -80,6 +90,7 @@ function normalizeState(data) {
     data.capsuleLetters = Array.isArray(data.capsuleLetters) ? data.capsuleLetters : [];
     data.calendarEvents = Array.isArray(data.calendarEvents) ? data.calendarEvents : [];
     data.quizAnswers = Array.isArray(data.quizAnswers) ? data.quizAnswers : [];
+    data.poems = Array.isArray(data.poems) ? data.poems : [];
     return data;
 }
 
