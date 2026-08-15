@@ -75,7 +75,12 @@ function initApp() {
 function switchTab(tabName) {
     document.querySelectorAll('.tab-page').forEach(el => el.classList.add('hidden'));
     document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('nav-tab-active'));
-    document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+    const target = document.getElementById(`tab-${tabName}`);
+    target.classList.remove('hidden');
+    // Transisi halus: restart animasi fade+slide setiap kali tab ditampilkan
+    target.classList.remove('tab-page-enter');
+    void target.offsetWidth; // paksa reflow supaya animasi bisa diulang
+    target.classList.add('tab-page-enter');
     document.getElementById(`nav-${tabName}`).classList.add('nav-tab-active');
     document.getElementById('mobile-nav-title').innerText = document.getElementById(`nav-${tabName}`).dataset.label;
     closeMobileNav();
@@ -113,6 +118,8 @@ function renderDashboard() {
     document.getElementById('dash-next-anniv').innerText = diffDays === 0
         ? `Hari ini adalah hari jadian ke-${yearsTogether}! 🎉`
         : `${diffDays} hari ke Anniversary ke-${yearsTogether}`;
+
+    if (diffDays === 0) triggerAnniversaryConfetti();
 
     document.getElementById('dash-my-city').innerText = p.myCity;
     document.getElementById('dash-partner-city').innerText = p.partnerCity;
