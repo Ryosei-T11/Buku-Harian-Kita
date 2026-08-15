@@ -75,6 +75,56 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--teal-seal);
         51% 90%, 57% 20%, 63% 80%, 69% 15%, 75% 95%, 81% 25%, 87% 85%, 93% 10%, 100% 100%, 100% 100%, 0% 100%);
 }
 
+/* ---------- LOADING AWAL ---------- */
+#boot-loading {
+    position: fixed; inset: 0; z-index: 100;
+    background: var(--paper-kraft);
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+.boot-loading-hide { opacity: 0; visibility: hidden; pointer-events: none; }
+.boot-loading-inner { text-align: center; color: var(--ink); }
+.boot-spinner { font-size: 2.6rem; animation: boot-flip 1.4s ease-in-out infinite; display: inline-block; }
+.boot-loading-inner p { font-family: 'Caveat', cursive; font-size: 1.3rem; margin-top: 10px; }
+@keyframes boot-flip {
+    0%, 100% { transform: rotateY(0deg); }
+    50% { transform: rotateY(180deg); }
+}
+
+/* ---------- TRANSISI TAB ---------- */
+.tab-page-enter { animation: tab-fade-slide 0.35s ease; }
+@keyframes tab-fade-slide {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- KONFETI ---------- */
+.confetti-container { position: fixed; inset: 0; z-index: 90; pointer-events: none; overflow: hidden; }
+.confetti-piece {
+    position: absolute; top: -12px; width: 9px; height: 14px;
+    opacity: 0.9; animation-name: confetti-fall; animation-timing-function: ease-in;
+    animation-fill-mode: forwards; transform: rotate(var(--rot));
+}
+@keyframes confetti-fall {
+    0% { transform: translateY(-10vh) rotate(var(--rot)); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(calc(var(--rot) + 260deg)); opacity: 0.4; }
+}
+
+/* ---------- DEKORASI LOCK SCREEN ---------- */
+.cover-tape {
+    position: absolute; width: 70px; height: 22px; opacity: 0.85;
+    background: repeating-linear-gradient(45deg, var(--tape-mustard), var(--tape-mustard) 6px, var(--tape-mustard-dark) 6px, var(--tape-mustard-dark) 12px);
+}
+.cover-tape-left { top: -10px; left: 18px; transform: rotate(-8deg); }
+.cover-tape-right { top: -10px; right: 18px; transform: rotate(8deg); background: repeating-linear-gradient(45deg, var(--tape-rose), var(--tape-rose) 6px, var(--tape-rose-dark) 6px, var(--tape-rose-dark) 12px); }
+.cover-doodle { position: absolute; font-size: 1.3rem; opacity: 0.8; animation: doodle-float 3.4s ease-in-out infinite; }
+.cover-doodle-1 { top: 16px; right: 26px; animation-delay: 0s; }
+.cover-doodle-2 { bottom: 18px; left: 22px; animation-delay: 1.2s; }
+@keyframes doodle-float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-6px) rotate(8deg); }
+}
+
 /* ---------- LOCK SCREEN ---------- */
 #lock-screen {
     position: fixed; inset: 0; z-index: 50;
@@ -348,6 +398,9 @@ input[type="file"] { padding: 8px; font-size: 0.75rem; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--paper-kraft-dark); border-radius: 10px; }
 
+/* ---------- LEBAR MAKSIMAL KONTEN (layar besar/monitor lebar) ---------- */
+.tab-page { max-width: 1100px; margin: 0 auto; }
+
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 860px) {
     #sidebar { left: -250px; width: 230px; }
@@ -360,6 +413,14 @@ input[type="file"] { padding: 8px; font-size: 0.75rem; }
 @media (max-width: 480px) {
     .polaroid { width: 100%; }
     .dash-big-number { font-size: 2.4rem; }
+    .quiz-compare { grid-template-columns: 1fr; }
+    .quiz-answer-form { flex-direction: column; align-items: stretch; }
+    .modal-box { padding: 18px; }
+    .diary-cover { padding: 26px 18px; }
+}
+@media (max-width: 360px) {
+    .settings-grid, .dash-grid, .capsule-grid { grid-template-columns: 1fr; }
+    .page-title-row h2 { font-size: 1.6rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
