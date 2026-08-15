@@ -65,6 +65,7 @@ function initApp() {
     renderPolaroids();
     renderDiary();
     renderQuiz();
+    renderPoems();
     renderBucketList();
     renderCalendar();
     renderCapsules();
