@@ -17,10 +17,15 @@ function renderPolaroids() {
     }
 
     appState.polaroids.forEach((p, idx) => {
-        const rotation = (idx % 5 - 2) * 3.2;
+        // Rotasi & pergeseran semi-acak tapi stabil (berbasis id foto), jadi terasa
+        // organik seperti ditempel tangan, bukan pola berulang tiap 5 foto.
+        const seed = Math.abs(Math.sin(p.id * 12.9898) * 43758.5453);
+        const rotation = ((seed - Math.floor(seed)) * 12) - 6; // -6deg s/d 6deg
+        const seedY = Math.abs(Math.sin(p.id * 78.233) * 12345.678);
+        const offsetY = ((seedY - Math.floor(seedY)) * 14) - 7; // -7px s/d 7px
         const card = document.createElement('div');
         card.className = 'polaroid';
-        card.style.transform = `rotate(${rotation}deg)`;
+        card.style.transform = `rotate(${rotation.toFixed(1)}deg) translateY(${offsetY.toFixed(1)}px)`;
         card.innerHTML = `
             <span class="washi washi-${p.tape || 'rose'}"></span>
             <img src="${p.img}" alt="${escapeHtml(p.caption)}" loading="lazy">
