@@ -52,6 +52,50 @@ function escapeHtml(str) {
     return div.innerHTML;
 }
 
+// ---------- MODAL KONFIRMASI HAPUS (dipakai bersama oleh semua modul) ----------
+let _pendingConfirmAction = null;
+
+function requestConfirm(message, onConfirm) {
+    document.getElementById('confirm-message').innerText = message;
+    _pendingConfirmAction = onConfirm;
+    document.getElementById('confirm-modal').classList.remove('hidden');
+}
+
+function closeConfirmModal() {
+    document.getElementById('confirm-modal').classList.add('hidden');
+    _pendingConfirmAction = null;
+}
+
+function executeConfirmedAction() {
+    const action = _pendingConfirmAction;
+    closeConfirmModal();
+    if (typeof action === 'function') action();
+}
+
+// ---------- TAG / LABEL (dipakai bersama oleh jurnal & puisi) ----------
+function parseTagsInput(str) {
+    if (!str) return [];
+    return Array.from(new Set(str.split(',').map(t => t.trim().toLowerCase()).filter(Boolean)));
+}
+
+function collectUniqueTags(items) {
+    const set = new Set();
+    items.forEach(it => (it.tags || []).forEach(t => set.add(t)));
+    return Array.from(set).sort();
+}
+
+function tagPillsHtml(tags) {
+    if (!tags || tags.length === 0) return '';
+    return `<div class="tag-pills">${tags.map(t => `<span class="tag-pill">#${escapeHtml(t)}</span>`).join('')}</div>`;
+}
+
+function tagFilterBarHtml(allTags, activeTag, toggleFnName) {
+    if (allTags.length === 0) return '';
+    return `<div class="tag-filter-bar">${allTags.map(t =>
+        `<button class="tag-filter-btn ${activeTag === t ? 'tag-filter-active' : ''}" onclick="${toggleFnName}('${t.replace(/'/g, "\\'")}')">#${escapeHtml(t)}</button>`
+    ).join('')}</div>`;
+}
+
 // ---------- KONFETI ANNIVERSARY ----------
 const CONFETTI_COLORS = ['#c1666b', '#d8a657', '#3f6e60', '#f7f0dc', '#a84e53'];
 
