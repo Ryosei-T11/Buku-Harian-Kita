@@ -113,7 +113,9 @@ function savePolaroid() {
 }
 
 function deletePolaroid(id) {
-    appState.polaroids = appState.polaroids.filter(p => p.id !== id);
-    saveState();
-    renderPolaroids();
+    requestConfirm('Hapus foto ini dari dinding kenangan? Tindakan ini tidak bisa dibatalkan.', () => {
+        appState.polaroids = appState.polaroids.filter(p => p.id !== id);
+        saveState();
+        renderPolaroids();
+    });
 }
