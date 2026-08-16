@@ -112,6 +112,9 @@
 
             <h3 style="margin-bottom:10px;">Catatan Terbaru 📌</h3>
             <div class="latest-note" id="dash-latest-entry"></div>
+
+            <h3 style="margin:22px 0 10px;">Kutipan Hari Ini 📜</h3>
+            <div class="quote-box" id="dash-quote-box"></div>
         </section>
 
         <!-- TAB: GALLERY -->
@@ -130,7 +133,8 @@
                 <h2>Jurnal Harian</h2>
                 <span class="page-sub">tulis cerita hari ini, gantian atau berdua</span>
             </div>
-            <button class="btn-tape btn-tape-teal" onclick="openDiaryModal()" style="margin-bottom:18px;">+ Tulis Halaman Baru</button>
+            <button class="btn-tape btn-tape-teal" onclick="openDiaryModal()" style="margin-bottom:14px;">+ Tulis Halaman Baru</button>
+            <div class="tag-filter-bar" id="diary-tag-filter"></div>
             <div class="diary-list" id="diary-list"></div>
         </section>
 
@@ -156,7 +160,8 @@
                 <h2>Puisi Kita</h2>
                 <span class="page-sub">kumpulan puisi yang kalian tulis sendiri, untuk satu sama lain</span>
             </div>
-            <button class="btn-tape btn-tape-rose" onclick="openPoemModal()" style="margin-bottom:18px;">+ Tulis Puisi Baru</button>
+            <button class="btn-tape btn-tape-rose" onclick="openPoemModal()" style="margin-bottom:14px;">+ Tulis Puisi Baru</button>
+            <div class="tag-filter-bar" id="poem-tag-filter"></div>
             <div class="poem-list" id="poem-list"></div>
         </section>
 
@@ -280,7 +285,8 @@
         <label style="font-size:0.68rem;text-transform:uppercase;color:var(--ink-soft);">Mood hari ini</label>
         <div class="mood-picker" id="diary-mood-picker"></div>
         <div class="settings-field" style="margin-bottom:10px;"><label>Judul</label><input id="diary-title-input" type="text" placeholder="Judul cerita hari ini"></div>
-        <div class="settings-field"><label>Ceritanya</label><textarea id="diary-content-input" rows="5" placeholder="Hari ini..."></textarea></div>
+        <div class="settings-field" style="margin-bottom:10px;"><label>Ceritanya</label><textarea id="diary-content-input" rows="5" placeholder="Hari ini..."></textarea></div>
+        <div class="settings-field"><label>Label (pisahkan dengan koma)</label><input id="diary-tags-input" type="text" placeholder="Misal: kangen, syukur, ldr"></div>
         <div class="modal-actions">
             <button class="btn-cancel" onclick="closeDiaryModal()">Batal</button>
             <button class="btn-tape btn-tape-teal" onclick="saveDiaryEntry()">Simpan</button>
@@ -333,12 +339,24 @@
     </div>
 </div>
 
+<div id="confirm-modal" class="modal-overlay hidden">
+    <div class="modal-box confirm-box">
+        <h3>Yakin? 🤔</h3>
+        <p id="confirm-message" class="confirm-message">Tindakan ini tidak bisa dibatalkan.</p>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeConfirmModal()">Batal</button>
+            <button class="btn-tape btn-tape-rose" onclick="executeConfirmedAction()">Ya, Hapus</button>
+        </div>
+    </div>
+</div>
+
 <div id="poem-modal" class="modal-overlay hidden">
     <div class="modal-box">
         <h3>Tulis Puisi Baru 📜</h3>
         <div class="settings-field" style="margin-bottom:10px;"><label>Judul</label><input id="poem-title-input" type="text" placeholder="Judul puisimu"></div>
         <div class="settings-field" style="margin-bottom:10px;"><label>Untuk Siapa? (opsional)</label><input id="poem-dedication-input" type="text" placeholder="Misal: Untuk Wian"></div>
-        <div class="settings-field"><label>Isi Puisi</label><textarea id="poem-content-input" rows="7" placeholder="Tulis baris demi baris di sini..."></textarea></div>
+        <div class="settings-field" style="margin-bottom:10px;"><label>Isi Puisi</label><textarea id="poem-content-input" rows="7" placeholder="Tulis baris demi baris di sini..."></textarea></div>
+        <div class="settings-field"><label>Label (pisahkan dengan koma)</label><input id="poem-tags-input" type="text" placeholder="Misal: rindu, ldr, syukur"></div>
         <div class="modal-actions">
             <button class="btn-cancel" onclick="closePoemModal()">Batal</button>
             <button class="btn-tape btn-tape-rose" onclick="savePoem()">Simpan</button>
