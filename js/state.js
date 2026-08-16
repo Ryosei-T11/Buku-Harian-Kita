@@ -37,7 +37,7 @@ let appState = {
         { id: 2, img: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=600', caption: 'Ketawa sampai perut sakit.', date: '2026-06-24', tape: 'mustard' }
     ],
     diaryEntries: [
-        { id: 1, author: 'creator', date: '2026-07-22', mood: '🥰', title: 'Halaman Pertama', content: 'Mulai dari sini, kita simpan cerita kita berdua. Setiap hal kecil, biar tidak lupa.' }
+        { id: 1, author: 'creator', date: '2026-07-22', mood: '🥰', title: 'Halaman Pertama', content: 'Mulai dari sini, kita simpan cerita kita berdua. Setiap hal kecil, biar tidak lupa.', tags: ['awal'] }
     ],
     bucketList: [
         { id: 1, title: 'Nonton sunset di Molibagu', category: 'Destinasi', completed: false },
@@ -67,7 +67,8 @@ let appState = {
             date: '2026-07-22',
             title: 'Halaman Pertama',
             dedication: 'Untuk Wian',
-            content: 'Di setiap baris yang kutulis,\nada namamu yang terselip diam-diam.\nBuku ini bukan cuma kertas,\ntapi rumah kecil untuk kita berdua.'
+            content: 'Di setiap baris yang kutulis,\nada namamu yang terselip diam-diam.\nBuku ini bukan cuma kertas,\ntapi rumah kecil untuk kita berdua.',
+            tags: ['awal']
         }
     ]
 };
