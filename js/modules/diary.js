@@ -3,10 +3,15 @@
 // =====================================================
 
 const MOOD_OPTIONS = ['🥰', '😊', '😴', '🥺', '😤', '🤗', '😭', '🎉'];
+let diaryActiveTag = null;
 
 function renderDiary() {
     const list = document.getElementById('diary-list');
+    const filterBar = document.getElementById('diary-tag-filter');
     list.innerHTML = '';
+
+    const allTags = collectUniqueTags(appState.diaryEntries);
+    filterBar.innerHTML = tagFilterBarHtml(allTags, diaryActiveTag, 'toggleDiaryTagFilter');
 
     if (appState.diaryEntries.length === 0) {
         list.innerHTML = `<p class="empty-note">Halaman jurnal masih kosong. Tulis cerita hari ini.</p>`;
@@ -14,7 +19,15 @@ function renderDiary() {
     }
 
     const p = getProfiles();
-    const sorted = [...appState.diaryEntries].sort((a, b) => b.date.localeCompare(a.date));
+    let sorted = [...appState.diaryEntries].sort((a, b) => b.date.localeCompare(a.date));
+    if (diaryActiveTag) {
+        sorted = sorted.filter(e => (e.tags || []).includes(diaryActiveTag));
+    }
+
+    if (sorted.length === 0) {
+        list.innerHTML = `<p class="empty-note">Tidak ada halaman dengan label #${escapeHtml(diaryActiveTag)}.</p>`;
+        return;
+    }
 
     sorted.forEach(entry => {
         const authorName = entry.author === getMyRole() ? p.myName : p.partnerName;
@@ -30,9 +43,15 @@ function renderDiary() {
                 <button class="diary-delete" onclick="deleteDiaryEntry(${entry.id})" title="Hapus">✕</button>
             </div>
             <p class="diary-content">${escapeHtml(entry.content)}</p>
+            ${tagPillsHtml(entry.tags)}
         `;
         list.appendChild(page);
     });
+}
+
+function toggleDiaryTagFilter(tag) {
+    diaryActiveTag = diaryActiveTag === tag ? null : tag;
+    renderDiary();
 }
 
 function openDiaryModal() {
@@ -54,6 +73,7 @@ function pickMood(m) {
 function saveDiaryEntry() {
     const title = document.getElementById('diary-title-input').value.trim();
     const content = document.getElementById('diary-content-input').value.trim();
+    const tags = parseTagsInput(document.getElementById('diary-tags-input').value);
     if (!title || !content) {
         showToast('Belum Lengkap', 'Isi judul dan ceritanya dulu ya.');
         return;
@@ -65,7 +85,8 @@ function saveDiaryEntry() {
         date: toLocalDateKey(new Date()),
         mood: selectedMood,
         title,
-        content
+        content,
+        tags
     });
     saveState();
     renderDiary();
@@ -73,12 +94,15 @@ function saveDiaryEntry() {
     closeDiaryModal();
     document.getElementById('diary-title-input').value = '';
     document.getElementById('diary-content-input').value = '';
+    document.getElementById('diary-tags-input').value = '';
     showToast('Ditulis ✍️', 'Halaman baru sudah tersimpan di jurnal.');
 }
 
 function deleteDiaryEntry(id) {
-    appState.diaryEntries = appState.diaryEntries.filter(e => e.id !== id);
-    saveState();
-    renderDiary();
-    renderDashboard();
+    requestConfirm('Hapus halaman jurnal ini? Tindakan ini tidak bisa dibatalkan.', () => {
+        appState.diaryEntries = appState.diaryEntries.filter(e => e.id !== id);
+        saveState();
+        renderDiary();
+        renderDashboard();
+    });
 }
