@@ -104,9 +104,11 @@ function editQuizAnswer(id) {
 }
 
 function deleteQuizQuestion(id) {
-    appState.quizAnswers = appState.quizAnswers.filter(q => q.id !== id);
-    saveState();
-    renderQuiz();
+    requestConfirm('Hapus pertanyaan kuis ini beserta jawaban kalian berdua?', () => {
+        appState.quizAnswers = appState.quizAnswers.filter(q => q.id !== id);
+        saveState();
+        renderQuiz();
+    });
 }
 
 function openQuizModal() { document.getElementById('quiz-modal').classList.remove('hidden'); }
