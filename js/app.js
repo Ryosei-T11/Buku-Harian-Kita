@@ -135,6 +135,39 @@ function renderDashboard() {
     } else {
         latestBox.innerHTML = `<span class="latest-meta">Belum ada catatan jurnal. Yuk tulis yang pertama!</span>`;
     }
+
+    renderDashboardQuote();
+}
+
+// Kutipan acak dari puisi yang sudah ditulis, satu pilihan tetap per hari
+// (tidak berubah-ubah tiap kali dashboard di-render ulang di hari yang sama).
+function renderDashboardQuote() {
+    const box = document.getElementById('dash-quote-box');
+    if (!box) return;
+
+    if (!appState.poems || appState.poems.length === 0) {
+        box.innerHTML = `<span class="latest-meta">Belum ada puisi. Tulis satu di tab "Puisi Kita" ✍️</span>`;
+        return;
+    }
+
+    const todayKey = toLocalDateKey(new Date());
+    const pickKey = 'buku_harian_quote_pick_' + todayKey;
+    let chosenId = localStorage.getItem(pickKey);
+    let poem = appState.poems.find(p => String(p.id) === chosenId);
+
+    if (!poem) {
+        poem = appState.poems[Math.floor(Math.random() * appState.poems.length)];
+        localStorage.setItem(pickKey, String(poem.id));
+    }
+
+    // Ambil satu-dua baris pertama saja supaya ringkas sebagai kutipan
+    const lines = poem.content.split('\n').filter(l => l.trim() !== '');
+    const snippet = lines.slice(0, 2).join('\n');
+
+    box.innerHTML = `
+        <p class="quote-text">"${escapeHtml(snippet)}${lines.length > 2 ? '...' : ''}"</p>
+        <span class="quote-source">— dari puisi "${escapeHtml(poem.title)}"</span>
+    `;
 }
 
 // ---------- PENGATURAN ----------
