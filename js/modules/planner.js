@@ -59,9 +59,11 @@ function saveBucketItem() {
 }
 
 function deleteBucket(id) {
-    appState.bucketList = appState.bucketList.filter(b => b.id !== id);
-    saveState();
-    renderBucketList();
+    requestConfirm('Hapus impian ini dari bucket list?', () => {
+        appState.bucketList = appState.bucketList.filter(b => b.id !== id);
+        saveState();
+        renderBucketList();
+    });
 }
 
 // ---------- KALENDER (navigasi bebas bulan/tahun, tak terbatas ke depan) ----------
@@ -153,9 +155,11 @@ function saveCalendarItem() {
 }
 
 function deleteCalendarItem(id) {
-    appState.calendarEvents = appState.calendarEvents.filter(e => e.id !== id);
-    saveState();
-    renderCalendar();
+    requestConfirm('Hapus jadwal ini dari kalender?', () => {
+        appState.calendarEvents = appState.calendarEvents.filter(e => e.id !== id);
+        saveState();
+        renderCalendar();
+    });
 }
 
 // ---------- KAPSUL WAKTU ----------
@@ -215,7 +219,9 @@ function saveCapsuleItem() {
 }
 
 function deleteCapsule(id) {
-    appState.capsuleLetters = appState.capsuleLetters.filter(c => c.id !== id);
-    saveState();
-    renderCapsules();
+    requestConfirm('Hapus surat kapsul waktu ini? Isinya tidak akan bisa dikembalikan.', () => {
+        appState.capsuleLetters = appState.capsuleLetters.filter(c => c.id !== id);
+        saveState();
+        renderCapsules();
+    });
 }
