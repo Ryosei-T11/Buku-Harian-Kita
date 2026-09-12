@@ -495,3 +495,48 @@ input[type="file"] { padding: 8px; font-size: 0.75rem; }
 @media (prefers-reduced-motion: reduce) {
     * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* ---------- REAKSI CEPAT ---------- */
+.reaction-bar { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.reaction-btn { font-size: 0.85rem; padding: 4px 9px; border-radius: 12px; background: var(--paper-cream-dark); display: inline-flex; align-items: center; gap: 4px; }
+.reaction-btn span { font-size: 0.65rem; font-family: 'Special Elite', monospace; color: var(--ink-soft); }
+.reaction-btn-active { background: var(--tape-mustard); }
+.reaction-btn-active span { color: #3a2b1c; }
+.poem-card .reaction-bar { justify-content: center; }
+
+/* ---------- LAGU KENANGAN ---------- */
+.song-link { display: inline-block; font-size: 0.72rem; color: var(--teal-seal); text-decoration: underline; margin-top: 8px; }
+
+/* ---------- PENCARIAN BEBAS ---------- */
+.search-input-bar { margin-bottom: 12px; }
+
+/* ---------- BADGE "BAB" HUBUNGAN ---------- */
+.chapter-badge { display: inline-block; margin-top: 8px; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.03em; background: var(--teal-seal); color: #fdf5e4; padding: 4px 10px; border-radius: 10px; }
+
+/* ---------- REKAP TAHUNAN/BULANAN ---------- */
+.recap-period-row { display: flex; gap: 6px; }
+.recap-period-btn { font-size: 0.68rem; padding: 5px 12px; border-radius: 14px; background: var(--paper-cream-dark); color: var(--ink-soft); }
+.recap-period-active { background: var(--teal-seal); color: #fdf5e4; }
+.recap-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 12px; margin-bottom: 22px; }
+.recap-stat { background: var(--paper-cream); border-radius: 8px; padding: 14px; text-align: center; box-shadow: 0 4px 10px var(--shadow-soft); }
+.recap-stat strong { display: block; font-family: 'Caveat', cursive; font-size: 1.8rem; color: var(--teal-seal); }
+.recap-stat span { font-size: 0.65rem; color: var(--ink-soft); }
+
+/* ---------- EKSPOR PDF (tampilan saat dicetak/disimpan sebagai PDF) ---------- */
+@media print {
+    #sidebar, .mobile-header, .mobile-menu-panel, .modal-overlay, #toast-container, #boot-loading,
+    .btn-tape, .btn-cancel, .btn-small, .btn-disabled,
+    .polaroid-delete, .diary-delete, .poem-delete, .bucket-delete, .capsule-delete, .quiz-delete, .quiz-edit-btn,
+    .tag-filter-bar, .search-input-bar, .reaction-bar, .subtab-row, .recap-period-row,
+    .quiz-answer-form, .confetti-container, .calendar-nav,
+    #boot-loading, .page-title-row .page-sub { display: none !important; }
+
+    body { background: white !important; }
+    #content-area { margin-left: 0 !important; padding: 0 !important; }
+    .tab-page { display: block !important; max-width: 100% !important; margin: 0 0 24px !important; page-break-after: always; transform: none !important; opacity: 1 !important; }
+    #planner-bucket, #planner-calendar, #planner-capsule { display: block !important; margin-bottom: 18px; }
+    .torn-panel, .diary-page, .poem-card, .dash-card, .quiz-card, .capsule-card, .agenda-item, .bucket-item, .polaroid, .latest-note, .quote-box, .recap-stat {
+        box-shadow: none !important; border: 1px solid #ddd; break-inside: avoid;
+    }
+    .polaroid { transform: none !important; }
+}
