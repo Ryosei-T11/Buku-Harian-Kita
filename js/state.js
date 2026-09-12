@@ -177,15 +177,19 @@ database.ref(CLOUD_NODE).on('value', (snapshot) => {
     hideBootLoading();
 });
 
-// 5. INDIKATOR STATUS KONEKSI CLOUD (ditampilkan kecil di sidebar)
+// 5. INDIKATOR STATUS KONEKSI CLOUD (ditampilkan di sidebar & header mobile)
 database.ref('.info/connected').on('value', (snap) => {
-    const el = document.getElementById('cloud-status');
-    if (!el) return;
-    if (snap.val() === true) {
-        el.innerText = '☁️ Tersambung';
-        el.classList.remove('cloud-status-off');
-    } else {
-        el.innerText = '☁️ Menghubungkan...';
-        el.classList.add('cloud-status-off');
+    const connected = snap.val() === true;
+    const desktopEl = document.getElementById('cloud-status');
+    const mobileEl = document.getElementById('mobile-cloud-status');
+
+    if (desktopEl) {
+        desktopEl.innerText = connected ? '☁️ Tersambung' : '☁️ Menghubungkan...';
+        desktopEl.classList.toggle('cloud-status-off', !connected);
+    }
+    if (mobileEl) {
+        mobileEl.innerText = connected ? '☁️' : '☁️…';
+        mobileEl.title = connected ? 'Tersambung ke cloud' : 'Menghubungkan ke cloud...';
+        mobileEl.classList.toggle('cloud-status-off', !connected);
     }
 });
