@@ -193,9 +193,8 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--teal-seal);
     background: linear-gradient(160deg, #4a3624, #3a2b1c);
     color: #ecdfc0;
     padding: 26px 16px;
-    position: fixed; top: 0; left: 0; height: 100vh; height: 100dvh; z-index: 60;
+    position: fixed; top: 0; left: 0; height: 100vh; height: 100dvh; z-index: 40;
     display: flex; flex-direction: column; justify-content: space-between;
-    transition: transform 0.32s cubic-bezier(0.25, 0.8, 0.35, 1);
 }
 .sidebar-brand { display: flex; align-items: center; gap: 10px; padding: 0 8px 22px; position: relative; }
 .sidebar-brand-icon {
@@ -206,7 +205,6 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--teal-seal);
 }
 .sidebar-brand h2 { color: #fdf5e4; font-size: 1.3rem; }
 .sidebar-brand span { font-size: 0.65rem; color: var(--tape-mustard); letter-spacing: 0.04em; }
-#sidebar-close-btn { display: none; position: absolute; right: 0; top: 0; color: #d8c6a3; font-size: 1.1rem; padding: 4px 8px; }
 
 .nav-tab {
     display: flex; align-items: center; gap: 10px; width: 100%;
@@ -222,23 +220,30 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--teal-seal);
 .cloud-status { display: inline-block; margin-bottom: 4px; color: #9fd6bd; font-weight: bold; }
 .cloud-status-off { color: #d8a657; }
 
-#sidebar-backdrop {
-    display: none; position: fixed; inset: 0; z-index: 55;
-    background: rgba(20, 15, 10, 0.55);
-    opacity: 0; transition: opacity 0.3s ease;
-}
-#sidebar-backdrop.sidebar-backdrop-show { display: block; opacity: 1; }
-body.no-scroll { overflow: hidden; }
-
 #content-area { flex: 1; margin-left: 230px; padding: 26px 30px 60px; min-height: 100vh; }
 
-.mobile-topbar {
-    display: none; align-items: center; justify-content: space-between;
-    background: linear-gradient(160deg, #4a3624, #3a2b1c); color: #fdf5e4;
-    padding: 14px 18px; position: sticky; top: 0; z-index: 30;
+/* ---------- TOP BAR NAVIGASI MOBILE (menggantikan sidebar di layar sempit) ---------- */
+.mobile-tabbar {
+    display: none; /* diaktifkan lewat media query di bawah */
+    gap: 6px;
+    background: linear-gradient(160deg, #4a3624, #3a2b1c);
+    padding: 10px 10px;
+    position: sticky; top: 0; z-index: 30;
     box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin: -20px -16px 18px;
 }
-.mobile-topbar button { color: #fdf5e4; font-size: 1.4rem; }
+.mobile-tabbar::-webkit-scrollbar { display: none; }
+.mobile-tab-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    flex-shrink: 0; padding: 7px 12px; border-radius: 8px;
+    color: #d8c6a3; font-size: 1.05rem; white-space: nowrap;
+}
+.mobile-tab-btn span { font-family: 'Special Elite', monospace; font-size: 0.6rem; }
+.mobile-tab-active { background: var(--tape-mustard); color: #3a2b1c; }
+.mobile-tab-active span { color: #3a2b1c; }
 
 .page-title-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
 .page-title-row h2 { font-size: 2rem; }
@@ -451,21 +456,11 @@ input[type="file"] { padding: 8px; font-size: 0.75rem; }
 
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 860px) {
-    #sidebar { transform: translateX(-100%); width: 200px; max-width: 62vw; padding: 20px 12px; }
-    #sidebar.sidebar-open { transform: translateX(0); box-shadow: 0 0 40px rgba(0,0,0,0.5); }
-    #sidebar-close-btn { display: block; }
-    .sidebar-brand-icon { width: 34px; height: 34px; font-size: 1rem; }
-    .sidebar-brand h2 { font-size: 1.1rem; }
-    .sidebar-brand span { font-size: 0.58rem; }
-    .nav-tab { padding: 9px 10px; font-size: 0.78rem; }
-    .sidebar-footer { font-size: 0.58rem; }
+    #sidebar { display: none; }
     #content-area { margin-left: 0; padding: 20px 16px 50px; }
-    .mobile-topbar { display: flex; }
+    .mobile-tabbar { display: flex; }
     .polaroid { width: 44%; }
     #calendar-layout { grid-template-columns: 1fr !important; }
-}
-@media (max-width: 340px) {
-    #sidebar { width: 180px; max-width: 70vw; }
 }
 @media (max-width: 480px) {
     .polaroid { width: 100%; }
