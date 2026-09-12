@@ -76,27 +76,24 @@ function initApp() {
 function switchTab(tabName) {
     document.querySelectorAll('.tab-page').forEach(el => el.classList.add('hidden'));
     document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('nav-tab-active'));
+    document.querySelectorAll('.mobile-tab-btn').forEach(el => el.classList.remove('mobile-tab-active'));
     const target = document.getElementById(`tab-${tabName}`);
     target.classList.remove('hidden');
     // Transisi halus: restart animasi fade+slide setiap kali tab ditampilkan
     target.classList.remove('tab-page-enter');
     void target.offsetWidth; // paksa reflow supaya animasi bisa diulang
     target.classList.add('tab-page-enter');
-    document.getElementById(`nav-${tabName}`).classList.add('nav-tab-active');
-    document.getElementById('mobile-nav-title').innerText = document.getElementById(`nav-${tabName}`).dataset.label;
-    closeMobileNav();
-    lucideReplace();
-}
 
-function toggleMobileNav() {
-    const isOpen = document.getElementById('sidebar').classList.toggle('sidebar-open');
-    document.getElementById('sidebar-backdrop').classList.toggle('sidebar-backdrop-show', isOpen);
-    document.body.classList.toggle('no-scroll', isOpen);
-}
-function closeMobileNav() {
-    document.getElementById('sidebar').classList.remove('sidebar-open');
-    document.getElementById('sidebar-backdrop').classList.remove('sidebar-backdrop-show');
-    document.body.classList.remove('no-scroll');
+    const navEl = document.getElementById(`nav-${tabName}`);
+    if (navEl) navEl.classList.add('nav-tab-active');
+
+    const mtabEl = document.getElementById(`mtab-${tabName}`);
+    if (mtabEl) {
+        mtabEl.classList.add('mobile-tab-active');
+        mtabEl.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+
+    lucideReplace();
 }
 
 // ---------- DASHBOARD ----------
