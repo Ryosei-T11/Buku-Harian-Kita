@@ -3,6 +3,7 @@
 // =====================================================
 
 let poemActiveTag = null;
+let poemSearchQuery = '';
 
 function renderPoems() {
     const container = document.getElementById('poem-list');
@@ -22,9 +23,12 @@ function renderPoems() {
     if (poemActiveTag) {
         sorted = sorted.filter(poem => (poem.tags || []).includes(poemActiveTag));
     }
+    if (poemSearchQuery) {
+        sorted = sorted.filter(poem => matchesSearch(poem.title, poemSearchQuery) || matchesSearch(poem.content, poemSearchQuery));
+    }
 
     if (sorted.length === 0) {
-        container.innerHTML = `<p class="empty-note">Tidak ada puisi dengan label #${escapeHtml(poemActiveTag)}.</p>`;
+        container.innerHTML = `<p class="empty-note">Tidak ada puisi yang cocok dengan pencarian/label ini.</p>`;
         return;
     }
 
@@ -38,7 +42,9 @@ function renderPoems() {
             ${poem.dedication ? `<p class="poem-dedication">${escapeHtml(poem.dedication)}</p>` : ''}
             <p class="poem-body">${escapeHtml(poem.content)}</p>
             <p class="poem-meta">— ${escapeHtml(authorName)}, ${formatTanggalSingkat(poem.date)}</p>
+            ${songLinkHtml(poem.song)}
             ${tagPillsHtml(poem.tags)}
+            ${reactionBarHtml('poem', poem.id, poem.reactions)}
         `;
         container.appendChild(card);
     });
@@ -46,6 +52,11 @@ function renderPoems() {
 
 function togglePoemTagFilter(tag) {
     poemActiveTag = poemActiveTag === tag ? null : tag;
+    renderPoems();
+}
+
+function handlePoemSearch(value) {
+    poemSearchQuery = value;
     renderPoems();
 }
 
@@ -57,6 +68,7 @@ function savePoem() {
     const dedication = document.getElementById('poem-dedication-input').value.trim();
     const content = document.getElementById('poem-content-input').value.trim();
     const tags = parseTagsInput(document.getElementById('poem-tags-input').value);
+    const song = document.getElementById('poem-song-input').value.trim();
 
     if (!title || !content) {
         showToast('Belum Lengkap', 'Isi judul dan isi puisinya dulu ya.');
@@ -70,7 +82,8 @@ function savePoem() {
         title,
         dedication,
         content,
-        tags
+        tags,
+        song
     });
     saveState();
     renderPoems();
@@ -79,6 +92,7 @@ function savePoem() {
     document.getElementById('poem-dedication-input').value = '';
     document.getElementById('poem-content-input').value = '';
     document.getElementById('poem-tags-input').value = '';
+    document.getElementById('poem-song-input').value = '';
     showToast('Tersimpan 📜', 'Puisimu sudah ditambahkan ke buku.');
 }
 
