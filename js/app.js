@@ -114,6 +114,12 @@ function renderDashboard() {
         ? `hari sejak ${formatTanggalSingkat(s.anniversaryDate)}`
         : `menuju ${formatTanggalSingkat(s.anniversaryDate)}`;
 
+    const chapter = getChapterBadge(hari);
+    document.getElementById('dash-chapter-badge').innerText = chapter.label;
+    document.getElementById('dash-chapter-badge').title = chapter.desc;
+
+    document.getElementById('dash-streak-count').innerText = computeWritingStreak();
+
     // Countdown ke anniversary tahun ini/berikutnya
     const annivDate = new Date(s.anniversaryDate + 'T00:00:00');
     const now = new Date();
@@ -144,6 +150,78 @@ function renderDashboard() {
     }
 
     renderDashboardQuote();
+    renderRecap();
+}
+
+// ---------- BADGE "BAB" HUBUNGAN ----------
+function getChapterBadge(days) {
+    if (days < 0) return { label: 'Bab 0: Menghitung Hari', desc: 'Menuju hari jadian pertama' };
+    if (days < 100) return { label: 'Bab 1: Awal Cerita', desc: 'Hari-hari pertama yang tak terlupakan' };
+    if (days < 365) return { label: 'Bab 2: Semakin Lekat', desc: 'Sudah melewati 100 hari bersama' };
+    const years = Math.floor(days / 365);
+    return { label: `Bab ${years + 2}: Tahun ke-${years} Bersama`, desc: `Sudah ${years} tahun melewati banyak hal berdua` };
+}
+
+// ---------- STREAK MENULIS JURNAL ----------
+function computeWritingStreak() {
+    const dates = new Set(appState.diaryEntries.map(e => e.date));
+    if (dates.size === 0) return 0;
+
+    let streak = 0;
+    let cursor = new Date();
+    // Kalau belum ada yang menulis hari ini, tetap hitung mundur dari kemarin
+    // supaya streak tidak langsung putus ke 0 di pagi hari sebelum sempat menulis.
+    if (!dates.has(toLocalDateKey(cursor))) {
+        cursor.setDate(cursor.getDate() - 1);
+    }
+    while (dates.has(toLocalDateKey(cursor))) {
+        streak++;
+        cursor.setDate(cursor.getDate() - 1);
+    }
+    return streak;
+}
+
+// ---------- REKAP TAHUNAN/BULANAN ----------
+let recapPeriod = 'month';
+
+function setRecapPeriod(period) {
+    recapPeriod = period;
+    renderRecap();
+}
+
+function isInRecapPeriod(dateStr, period) {
+    if (period === 'all') return true;
+    const d = new Date(dateStr + 'T00:00:00');
+    const now = new Date();
+    if (period === 'year') return d.getFullYear() === now.getFullYear();
+    return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+}
+
+function renderRecap() {
+    const box = document.getElementById('dash-recap-box');
+    if (!box) return;
+    document.querySelectorAll('.recap-period-btn').forEach(b =>
+        b.classList.toggle('recap-period-active', b.dataset.period === recapPeriod)
+    );
+
+    const diaryInPeriod = appState.diaryEntries.filter(e => isInRecapPeriod(e.date, recapPeriod));
+    const poemCount = appState.poems.filter(e => isInRecapPeriod(e.date, recapPeriod)).length;
+    const photoCount = appState.polaroids.filter(e => isInRecapPeriod(e.date, recapPeriod)).length;
+
+    const moodCounts = {};
+    diaryInPeriod.forEach(e => { moodCounts[e.mood] = (moodCounts[e.mood] || 0) + 1; });
+    let topMood = '—';
+    let topMoodCount = 0;
+    Object.entries(moodCounts).forEach(([mood, count]) => {
+        if (count > topMoodCount) { topMood = mood; topMoodCount = count; }
+    });
+
+    box.innerHTML = `
+        <div class="recap-stat"><strong>${diaryInPeriod.length}</strong><span>halaman jurnal</span></div>
+        <div class="recap-stat"><strong>${photoCount}</strong><span>foto ditempel</span></div>
+        <div class="recap-stat"><strong>${poemCount}</strong><span>puisi ditulis</span></div>
+        <div class="recap-stat"><strong>${topMood}</strong><span>mood terbanyak</span></div>
+    `;
 }
 
 // Kutipan acak dari puisi yang sudah ditulis, satu pilihan tetap per hari
@@ -214,6 +292,12 @@ function saveSettings() {
 
 function lucideReplace() {
     // Placeholder no-op: ikon di app ini murni emoji/CSS, tidak pakai library luar.
+}
+
+// ---------- EKSPOR PDF ----------
+function exportToPDF() {
+    showToast('Menyiapkan PDF 📕', 'Membuka dialog cetak / simpan sebagai PDF...');
+    setTimeout(() => window.print(), 350);
 }
 
 // ---------- BOOT ----------
