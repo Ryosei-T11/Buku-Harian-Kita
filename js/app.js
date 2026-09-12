@@ -88,12 +88,18 @@ function switchTab(tabName) {
     if (navEl) navEl.classList.add('nav-tab-active');
 
     const mtabEl = document.getElementById(`mtab-${tabName}`);
-    if (mtabEl) {
-        mtabEl.classList.add('mobile-tab-active');
-        mtabEl.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-    }
+    if (mtabEl) mtabEl.classList.add('mobile-tab-active');
 
+    closeMobileMenu();
     lucideReplace();
+}
+
+// ---------- DRAWER MENU MOBILE ----------
+function toggleMobileMenu() {
+    document.getElementById('mobile-menu-panel').classList.toggle('mobile-menu-open');
+}
+function closeMobileMenu() {
+    document.getElementById('mobile-menu-panel').classList.remove('mobile-menu-open');
 }
 
 // ---------- DASHBOARD ----------
