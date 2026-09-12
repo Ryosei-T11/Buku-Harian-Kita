@@ -6,7 +6,7 @@
 <title>Buku Harian Kita 📖</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./css/style.css?v=20260912f">
+<link rel="stylesheet" href="./css/style.css?v=20260913a">
 </head>
 <body>
 
@@ -110,6 +110,7 @@
                     <span class="dash-card-tape"></span>
                     <div class="dash-big-number" id="dash-days-count">0</div>
                     <p id="dash-anniv-since">hari sejak jadian</p>
+                    <span class="chapter-badge" id="dash-chapter-badge">Bab 1: Awal Cerita</span>
                 </div>
                 <div class="dash-card">
                     <span class="dash-card-tape"></span>
@@ -122,7 +123,22 @@
                     <p>Kamu: <span id="dash-my-city">-</span></p>
                     <p><span id="dash-partner-name-label">Pasangan</span>: <span id="dash-partner-city">-</span></p>
                 </div>
+                <div class="dash-card">
+                    <span class="dash-card-tape"></span>
+                    <div class="dash-big-number" id="dash-streak-count">0</div>
+                    <p>🔥 hari beruntun menulis jurnal</p>
+                </div>
             </div>
+
+            <div class="page-title-row" style="margin-top:22px;">
+                <h3 style="margin:0;">Rekap 📊</h3>
+                <div class="recap-period-row">
+                    <button class="recap-period-btn recap-period-active" data-period="month" onclick="setRecapPeriod('month')">Bulan Ini</button>
+                    <button class="recap-period-btn" data-period="year" onclick="setRecapPeriod('year')">Tahun Ini</button>
+                    <button class="recap-period-btn" data-period="all" onclick="setRecapPeriod('all')">Semua</button>
+                </div>
+            </div>
+            <div class="recap-box" id="dash-recap-box"></div>
 
             <h3 style="margin-bottom:10px;">Catatan Terbaru 📌</h3>
             <div class="latest-note" id="dash-latest-entry"></div>
@@ -148,6 +164,7 @@
                 <span class="page-sub">tulis cerita hari ini, gantian atau berdua</span>
             </div>
             <button class="btn-tape btn-tape-teal" onclick="openDiaryModal()" style="margin-bottom:14px;">+ Tulis Halaman Baru</button>
+            <input type="text" class="search-input-bar" placeholder="🔍 Cari kata di jurnal..." oninput="handleDiarySearch(this.value)">
             <div class="tag-filter-bar" id="diary-tag-filter"></div>
             <div class="diary-list" id="diary-list"></div>
         </section>
@@ -175,6 +192,7 @@
                 <span class="page-sub">kumpulan puisi yang kalian tulis sendiri, untuk satu sama lain</span>
             </div>
             <button class="btn-tape btn-tape-rose" onclick="openPoemModal()" style="margin-bottom:14px;">+ Tulis Puisi Baru</button>
+            <input type="text" class="search-input-bar" placeholder="🔍 Cari kata di puisi..." oninput="handlePoemSearch(this.value)">
             <div class="tag-filter-bar" id="poem-tag-filter"></div>
             <div class="poem-list" id="poem-list"></div>
         </section>
@@ -260,6 +278,12 @@
                 </div>
                 <button class="btn-tape btn-tape-teal" onclick="saveSettings()">💾 Simpan Pengaturan</button>
             </div>
+
+            <div class="torn-panel" style="margin-top:18px;">
+                <h3 style="margin-bottom:6px;">Cetak Buku Harian 📕</h3>
+                <p style="font-size:0.78rem;color:var(--ink-soft);margin-bottom:14px;">Ekspor semua halaman (jurnal, puisi, dinding kenangan, rencana) jadi satu dokumen yang bisa disimpan sebagai PDF atau dicetak fisik.</p>
+                <button class="btn-tape btn-tape-rose" onclick="exportToPDF()">📕 Ekspor ke PDF</button>
+            </div>
         </section>
 
     </main>
@@ -279,6 +303,7 @@
         <div class="settings-field" style="margin-bottom:10px;"><label>Atau Tempel Link URL (opsional)</label><input id="polaroid-img-input" type="text" placeholder="https://..."></div>
         <div class="settings-field" style="margin-bottom:10px;"><label>Caption</label><input id="polaroid-caption-input" type="text" placeholder="Tulis cerita singkat di balik foto ini"></div>
         <div class="settings-field" style="margin-bottom:10px;"><label>Tanggal</label><input id="polaroid-date-input" type="date"></div>
+        <div class="settings-field" style="margin-bottom:10px;"><label>Lagu Kenangan (opsional)</label><input id="polaroid-song-input" type="text" placeholder="Link Spotify/YouTube"></div>
         <div class="settings-field"><label>Warna Washi Tape</label>
             <select id="polaroid-tape-input">
                 <option value="rose">Rose</option>
@@ -301,6 +326,7 @@
         <div class="settings-field" style="margin-bottom:10px;"><label>Judul</label><input id="diary-title-input" type="text" placeholder="Judul cerita hari ini"></div>
         <div class="settings-field" style="margin-bottom:10px;"><label>Ceritanya</label><textarea id="diary-content-input" rows="5" placeholder="Hari ini..."></textarea></div>
         <div class="settings-field"><label>Label (pisahkan dengan koma)</label><input id="diary-tags-input" type="text" placeholder="Misal: kangen, syukur, ldr"></div>
+        <div class="settings-field" style="margin-top:10px;"><label>Lagu Kenangan (opsional)</label><input id="diary-song-input" type="text" placeholder="Link Spotify/YouTube"></div>
         <div class="modal-actions">
             <button class="btn-cancel" onclick="closeDiaryModal()">Batal</button>
             <button class="btn-tape btn-tape-teal" onclick="saveDiaryEntry()">Simpan</button>
@@ -371,6 +397,7 @@
         <div class="settings-field" style="margin-bottom:10px;"><label>Untuk Siapa? (opsional)</label><input id="poem-dedication-input" type="text" placeholder="Misal: Untuk Wian"></div>
         <div class="settings-field" style="margin-bottom:10px;"><label>Isi Puisi</label><textarea id="poem-content-input" rows="7" placeholder="Tulis baris demi baris di sini..."></textarea></div>
         <div class="settings-field"><label>Label (pisahkan dengan koma)</label><input id="poem-tags-input" type="text" placeholder="Misal: rindu, ldr, syukur"></div>
+        <div class="settings-field" style="margin-top:10px;"><label>Lagu Kenangan (opsional)</label><input id="poem-song-input" type="text" placeholder="Link Spotify/YouTube"></div>
         <div class="modal-actions">
             <button class="btn-cancel" onclick="closePoemModal()">Batal</button>
             <button class="btn-tape btn-tape-rose" onclick="savePoem()">Simpan</button>
@@ -402,13 +429,13 @@
 <!-- SDK Firebase versi stabil (v8) untuk sinkronisasi cloud real-time -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<script src="./js/state.js?v=20260912f"></script>
-<script src="./js/utils.js?v=20260912f"></script>
-<script src="./js/modules/gallery.js?v=20260912f"></script>
-<script src="./js/modules/diary.js?v=20260912f"></script>
-<script src="./js/modules/quiz.js?v=20260912f"></script>
-<script src="./js/modules/poetry.js?v=20260912f"></script>
-<script src="./js/modules/planner.js?v=20260912f"></script>
-<script src="./js/app.js?v=20260912f"></script>
+<script src="./js/state.js?v=20260913a"></script>
+<script src="./js/utils.js?v=20260913a"></script>
+<script src="./js/modules/gallery.js?v=20260913a"></script>
+<script src="./js/modules/diary.js?v=20260913a"></script>
+<script src="./js/modules/quiz.js?v=20260913a"></script>
+<script src="./js/modules/poetry.js?v=20260913a"></script>
+<script src="./js/modules/planner.js?v=20260913a"></script>
+<script src="./js/app.js?v=20260913a"></script>
 </body>
 </html>
