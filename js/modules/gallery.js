@@ -31,6 +31,8 @@ function renderPolaroids() {
             <img src="${p.img}" alt="${escapeHtml(p.caption)}" loading="lazy">
             <p class="polaroid-caption">${escapeHtml(p.caption)}</p>
             <span class="polaroid-date">${formatTanggalSingkat(p.date)}</span>
+            ${songLinkHtml(p.song)}
+            ${reactionBarHtml('polaroid', p.id, p.reactions)}
             <button class="polaroid-delete" onclick="deletePolaroid(${p.id})" title="Hapus">✕</button>
         `;
         wall.appendChild(card);
@@ -96,18 +98,20 @@ function savePolaroid() {
     const caption = document.getElementById('polaroid-caption-input').value.trim();
     const date = document.getElementById('polaroid-date-input').value || toLocalDateKey(new Date());
     const tape = document.getElementById('polaroid-tape-input').value;
+    const song = document.getElementById('polaroid-song-input').value.trim();
 
     if (!img || !caption) {
         showToast('Belum Lengkap', 'Upload foto (atau tempel link) dan isi captionnya dulu ya.');
         return;
     }
 
-    appState.polaroids.push({ id: Date.now(), img, caption, date, tape });
+    appState.polaroids.push({ id: Date.now(), img, caption, date, tape, song });
     saveState();
     renderPolaroids();
     closePolaroidModal();
     document.getElementById('polaroid-img-input').value = '';
     document.getElementById('polaroid-caption-input').value = '';
+    document.getElementById('polaroid-song-input').value = '';
     pendingUploadDataUrl = null;
     showToast('Tertempel! 📌', 'Kenangan baru sudah nempel di dinding.');
 }
