@@ -451,13 +451,21 @@ input[type="file"] { padding: 8px; font-size: 0.75rem; }
 
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 860px) {
-    #sidebar { transform: translateX(-100%); width: 250px; max-width: 78vw; }
+    #sidebar { transform: translateX(-100%); width: 200px; max-width: 62vw; padding: 20px 12px; }
     #sidebar.sidebar-open { transform: translateX(0); box-shadow: 0 0 40px rgba(0,0,0,0.5); }
     #sidebar-close-btn { display: block; }
+    .sidebar-brand-icon { width: 34px; height: 34px; font-size: 1rem; }
+    .sidebar-brand h2 { font-size: 1.1rem; }
+    .sidebar-brand span { font-size: 0.58rem; }
+    .nav-tab { padding: 9px 10px; font-size: 0.78rem; }
+    .sidebar-footer { font-size: 0.58rem; }
     #content-area { margin-left: 0; padding: 20px 16px 50px; }
     .mobile-topbar { display: flex; }
     .polaroid { width: 44%; }
     #calendar-layout { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 340px) {
+    #sidebar { width: 180px; max-width: 70vw; }
 }
 @media (max-width: 480px) {
     .polaroid { width: 100%; }
