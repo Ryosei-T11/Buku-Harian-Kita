@@ -6,6 +6,26 @@ function getRoleAnswerKey(role) {
     return role === 'partner' ? 'partnerAnswer' : 'creatorAnswer';
 }
 
+// Membandingkan jawaban secara lebih fleksibel: mengabaikan huruf besar/kecil,
+// tanda baca, dan spasi berlebih — juga tetap dianggap "cocok" kalau satu jawaban
+// cuma menambahkan kata di ujung jawaban yang lain (misal "22 Juli 2026" vs
+// "22 juli 2026 lahhh").
+function normalizeQuizAnswer(str) {
+    return String(str || '')
+        .toLowerCase()
+        .replace(/[.,!?;:'"()\-_/\\]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function isQuizAnswerMatch(a, b) {
+    const na = normalizeQuizAnswer(a);
+    const nb = normalizeQuizAnswer(b);
+    if (!na || !nb) return false;
+    if (na === nb) return true;
+    return na.includes(nb) || nb.includes(na);
+}
+
 function renderQuiz() {
     const container = document.getElementById('quiz-list');
     container.innerHTML = '';
@@ -42,7 +62,7 @@ function renderQuiz() {
                 <button class="quiz-edit-btn" onclick="editQuizAnswer(${item.id})">Ubah jawabanku</button>`;
         } else {
             // Berdua sudah jawab -> tampilkan perbandingan
-            const match = myAnswer.trim().toLowerCase() === otherAnswer.trim().toLowerCase();
+            const match = isQuizAnswerMatch(myAnswer, otherAnswer);
             bodyHtml = `
                 <div class="quiz-compare">
                     <div class="quiz-compare-col">
@@ -70,7 +90,7 @@ function renderQuiz() {
 
     // Skor kecocokan keseluruhan
     const answeredBoth = appState.quizAnswers.filter(q => q.creatorAnswer && q.partnerAnswer);
-    const matchCount = answeredBoth.filter(q => q.creatorAnswer.trim().toLowerCase() === q.partnerAnswer.trim().toLowerCase()).length;
+    const matchCount = answeredBoth.filter(q => isQuizAnswerMatch(q.creatorAnswer, q.partnerAnswer)).length;
     const scoreBox = document.getElementById('quiz-score');
     if (answeredBoth.length > 0) {
         scoreBox.classList.remove('hidden');
