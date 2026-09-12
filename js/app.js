@@ -89,10 +89,14 @@ function switchTab(tabName) {
 }
 
 function toggleMobileNav() {
-    document.getElementById('sidebar').classList.toggle('sidebar-open');
+    const isOpen = document.getElementById('sidebar').classList.toggle('sidebar-open');
+    document.getElementById('sidebar-backdrop').classList.toggle('sidebar-backdrop-show', isOpen);
+    document.body.classList.toggle('no-scroll', isOpen);
 }
 function closeMobileNav() {
     document.getElementById('sidebar').classList.remove('sidebar-open');
+    document.getElementById('sidebar-backdrop').classList.remove('sidebar-backdrop-show');
+    document.body.classList.remove('no-scroll');
 }
 
 // ---------- DASHBOARD ----------
