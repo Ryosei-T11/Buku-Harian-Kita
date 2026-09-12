@@ -4,6 +4,7 @@
 
 const MOOD_OPTIONS = ['🥰', '😊', '😴', '🥺', '😤', '🤗', '😭', '🎉'];
 let diaryActiveTag = null;
+let diarySearchQuery = '';
 
 function renderDiary() {
     const list = document.getElementById('diary-list');
@@ -23,9 +24,12 @@ function renderDiary() {
     if (diaryActiveTag) {
         sorted = sorted.filter(e => (e.tags || []).includes(diaryActiveTag));
     }
+    if (diarySearchQuery) {
+        sorted = sorted.filter(e => matchesSearch(e.title, diarySearchQuery) || matchesSearch(e.content, diarySearchQuery));
+    }
 
     if (sorted.length === 0) {
-        list.innerHTML = `<p class="empty-note">Tidak ada halaman dengan label #${escapeHtml(diaryActiveTag)}.</p>`;
+        list.innerHTML = `<p class="empty-note">Tidak ada halaman yang cocok dengan pencarian/label ini.</p>`;
         return;
     }
 
@@ -43,7 +47,9 @@ function renderDiary() {
                 <button class="diary-delete" onclick="deleteDiaryEntry(${entry.id})" title="Hapus">✕</button>
             </div>
             <p class="diary-content">${escapeHtml(entry.content)}</p>
+            ${songLinkHtml(entry.song)}
             ${tagPillsHtml(entry.tags)}
+            ${reactionBarHtml('diary', entry.id, entry.reactions)}
         `;
         list.appendChild(page);
     });
@@ -51,6 +57,11 @@ function renderDiary() {
 
 function toggleDiaryTagFilter(tag) {
     diaryActiveTag = diaryActiveTag === tag ? null : tag;
+    renderDiary();
+}
+
+function handleDiarySearch(value) {
+    diarySearchQuery = value;
     renderDiary();
 }
 
@@ -74,6 +85,7 @@ function saveDiaryEntry() {
     const title = document.getElementById('diary-title-input').value.trim();
     const content = document.getElementById('diary-content-input').value.trim();
     const tags = parseTagsInput(document.getElementById('diary-tags-input').value);
+    const song = document.getElementById('diary-song-input').value.trim();
     if (!title || !content) {
         showToast('Belum Lengkap', 'Isi judul dan ceritanya dulu ya.');
         return;
@@ -86,7 +98,8 @@ function saveDiaryEntry() {
         mood: selectedMood,
         title,
         content,
-        tags
+        tags,
+        song
     });
     saveState();
     renderDiary();
@@ -95,6 +108,7 @@ function saveDiaryEntry() {
     document.getElementById('diary-title-input').value = '';
     document.getElementById('diary-content-input').value = '';
     document.getElementById('diary-tags-input').value = '';
+    document.getElementById('diary-song-input').value = '';
     showToast('Ditulis ✍️', 'Halaman baru sudah tersimpan di jurnal.');
 }
 
