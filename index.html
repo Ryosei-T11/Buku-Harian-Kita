@@ -6,7 +6,7 @@
 <title>Buku Harian Kita 📖</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./css/style.css?v=20260912c">
+<link rel="stylesheet" href="./css/style.css?v=20260912d">
 </head>
 <body>
 
@@ -51,14 +51,6 @@
 <!-- ===================== MAIN APP ===================== -->
 <div id="main-app" class="hidden">
 
-    <div class="mobile-topbar">
-        <button onclick="toggleMobileNav()" aria-label="Buka menu">☰</button>
-        <span id="mobile-nav-title" class="handwritten" style="font-size:1.3rem;">Halaman Depan</span>
-        <span style="width:24px;"></span>
-    </div>
-
-    <div id="sidebar-backdrop" onclick="closeMobileNav()"></div>
-
     <aside id="sidebar">
         <div>
             <div class="sidebar-brand">
@@ -67,7 +59,6 @@
                     <h2>Kita</h2>
                     <span>Buku Harian Digital</span>
                 </div>
-                <button id="sidebar-close-btn" onclick="closeMobileNav()" aria-label="Tutup menu">✕</button>
             </div>
             <nav>
                 <button class="nav-tab nav-tab-active" id="nav-dashboard" data-label="Halaman Depan" onclick="switchTab('dashboard')"><span class="nav-emoji">🏠</span> Halaman Depan</button>
@@ -87,6 +78,16 @@
 
     <main id="content-area">
 
+        <!-- NAVIGASI MOBILE: top bar horizontal, menggantikan sidebar di layar sempit -->
+        <nav class="mobile-tabbar" id="mobile-tabbar">
+            <button class="mobile-tab-btn mobile-tab-active" id="mtab-dashboard" onclick="switchTab('dashboard')">🏠<span>Depan</span></button>
+            <button class="mobile-tab-btn" id="mtab-gallery" onclick="switchTab('gallery')">📷<span>Kenangan</span></button>
+            <button class="mobile-tab-btn" id="mtab-diary" onclick="switchTab('diary')">📝<span>Jurnal</span></button>
+            <button class="mobile-tab-btn" id="mtab-quiz" onclick="switchTab('quiz')">🧩<span>Kuis</span></button>
+            <button class="mobile-tab-btn" id="mtab-poems" onclick="switchTab('poems')">📜<span>Puisi</span></button>
+            <button class="mobile-tab-btn" id="mtab-planner" onclick="switchTab('planner')">🗺️<span>Rencana</span></button>
+            <button class="mobile-tab-btn" id="mtab-settings" onclick="switchTab('settings')">⚙️<span>Atur</span></button>
+        </nav>
         <!-- TAB: DASHBOARD -->
         <section id="tab-dashboard" class="tab-page">
             <div class="page-title-row">
@@ -391,13 +392,13 @@
 <!-- SDK Firebase versi stabil (v8) untuk sinkronisasi cloud real-time -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<script src="./js/state.js?v=20260912c"></script>
-<script src="./js/utils.js?v=20260912c"></script>
-<script src="./js/modules/gallery.js?v=20260912c"></script>
-<script src="./js/modules/diary.js?v=20260912c"></script>
-<script src="./js/modules/quiz.js?v=20260912c"></script>
-<script src="./js/modules/poetry.js?v=20260912c"></script>
-<script src="./js/modules/planner.js?v=20260912c"></script>
-<script src="./js/app.js?v=20260912c"></script>
+<script src="./js/state.js?v=20260912d"></script>
+<script src="./js/utils.js?v=20260912d"></script>
+<script src="./js/modules/gallery.js?v=20260912d"></script>
+<script src="./js/modules/diary.js?v=20260912d"></script>
+<script src="./js/modules/quiz.js?v=20260912d"></script>
+<script src="./js/modules/poetry.js?v=20260912d"></script>
+<script src="./js/modules/planner.js?v=20260912d"></script>
+<script src="./js/app.js?v=20260912d"></script>
 </body>
 </html>
