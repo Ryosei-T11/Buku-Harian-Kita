@@ -6,7 +6,7 @@
 <title>Buku Harian Kita 📖</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./css/style.css?v=20260912d">
+<link rel="stylesheet" href="./css/style.css?v=20260912e">
 </head>
 <body>
 
@@ -78,8 +78,18 @@
 
     <main id="content-area">
 
-        <!-- NAVIGASI MOBILE: top bar horizontal, menggantikan sidebar di layar sempit -->
-        <nav class="mobile-tabbar" id="mobile-tabbar">
+        <!-- HEADER MOBILE: logo, status cloud, dan tombol buka drawer menu -->
+        <header class="mobile-header">
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Buka menu">☰</button>
+            <div class="mobile-brand">
+                <span class="mobile-brand-icon">💌</span>
+                <span class="mobile-brand-name">Kita</span>
+            </div>
+            <span class="mobile-cloud-status" id="mobile-cloud-status" title="Menghubungkan ke cloud...">☁️…</span>
+        </header>
+
+        <!-- DRAWER MENU MOBILE: panel dropdown berisi tab bergaya top bar -->
+        <nav class="mobile-menu-panel" id="mobile-menu-panel">
             <button class="mobile-tab-btn mobile-tab-active" id="mtab-dashboard" onclick="switchTab('dashboard')">🏠<span>Depan</span></button>
             <button class="mobile-tab-btn" id="mtab-gallery" onclick="switchTab('gallery')">📷<span>Kenangan</span></button>
             <button class="mobile-tab-btn" id="mtab-diary" onclick="switchTab('diary')">📝<span>Jurnal</span></button>
@@ -392,13 +402,13 @@
 <!-- SDK Firebase versi stabil (v8) untuk sinkronisasi cloud real-time -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<script src="./js/state.js?v=20260912d"></script>
-<script src="./js/utils.js?v=20260912d"></script>
-<script src="./js/modules/gallery.js?v=20260912d"></script>
-<script src="./js/modules/diary.js?v=20260912d"></script>
-<script src="./js/modules/quiz.js?v=20260912d"></script>
-<script src="./js/modules/poetry.js?v=20260912d"></script>
-<script src="./js/modules/planner.js?v=20260912d"></script>
-<script src="./js/app.js?v=20260912d"></script>
+<script src="./js/state.js?v=20260912e"></script>
+<script src="./js/utils.js?v=20260912e"></script>
+<script src="./js/modules/gallery.js?v=20260912e"></script>
+<script src="./js/modules/diary.js?v=20260912e"></script>
+<script src="./js/modules/quiz.js?v=20260912e"></script>
+<script src="./js/modules/poetry.js?v=20260912e"></script>
+<script src="./js/modules/planner.js?v=20260912e"></script>
+<script src="./js/app.js?v=20260912e"></script>
 </body>
 </html>
