@@ -96,6 +96,59 @@ function tagFilterBarHtml(allTags, activeTag, toggleFnName) {
     ).join('')}</div>`;
 }
 
+// ---------- REAKSI CEPAT (dipakai bersama oleh jurnal, puisi, & dinding kenangan) ----------
+const REACTION_EMOJIS = ['❤️', '😂', '🥺', '😮'];
+const REACTION_SOURCE = {
+    diary: () => appState.diaryEntries,
+    poem: () => appState.poems,
+    polaroid: () => appState.polaroids
+};
+const REACTION_RERENDER = {
+    diary: () => typeof renderDiary === 'function' && renderDiary(),
+    poem: () => typeof renderPoems === 'function' && renderPoems(),
+    polaroid: () => typeof renderPolaroids === 'function' && renderPolaroids()
+};
+
+function toggleReaction(itemType, itemId, emoji) {
+    const getArr = REACTION_SOURCE[itemType];
+    if (!getArr) return;
+    const item = getArr().find(i => String(i.id) === String(itemId));
+    if (!item) return;
+
+    item.reactions = item.reactions || {};
+    const role = getMyRole();
+    const list = item.reactions[emoji] || [];
+    const idx = list.indexOf(role);
+    if (idx >= 0) list.splice(idx, 1); else list.push(role);
+    if (list.length > 0) item.reactions[emoji] = list; else delete item.reactions[emoji];
+
+    saveState();
+    const rerender = REACTION_RERENDER[itemType];
+    if (rerender) rerender();
+}
+
+function reactionBarHtml(itemType, itemId, reactions) {
+    const myRole = typeof getMyRole === 'function' ? getMyRole() : 'creator';
+    return `<div class="reaction-bar">${REACTION_EMOJIS.map(e => {
+        const list = (reactions && reactions[e]) || [];
+        const mine = list.includes(myRole);
+        const count = list.length;
+        return `<button class="reaction-btn ${mine ? 'reaction-btn-active' : ''}" onclick="toggleReaction('${itemType}','${itemId}','${e}')">${e}${count > 0 ? `<span>${count}</span>` : ''}</button>`;
+    }).join('')}</div>`;
+}
+
+// ---------- LAGU KENANGAN ----------
+function songLinkHtml(url) {
+    if (!url || !/^https?:\/\//i.test(url)) return '';
+    return `<a class="song-link" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">🎵 Dengerin lagunya</a>`;
+}
+
+// ---------- PENCARIAN BEBAS ----------
+function matchesSearch(text, query) {
+    if (!query) return true;
+    return String(text || '').toLowerCase().includes(query.trim().toLowerCase());
+}
+
 // ---------- KONFETI ANNIVERSARY ----------
 const CONFETTI_COLORS = ['#c1666b', '#d8a657', '#3f6e60', '#f7f0dc', '#a84e53'];
 
