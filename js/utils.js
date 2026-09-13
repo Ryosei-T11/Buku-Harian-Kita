@@ -2,6 +2,29 @@
 // UTILS
 // =====================================================
 
+// ---------- TEMA MALAM (Dark Mode) ----------
+// Diterapkan sedini mungkin (saat utils.js dimuat) supaya tidak ada kedipan
+// tema terang sebelum tema gelap yang tersimpan diterapkan.
+const THEME_STORAGE_KEY = 'buku_harian_theme';
+
+function applyTheme(theme) {
+    if (theme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+        document.documentElement.removeAttribute('data-theme');
+    }
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+    document.querySelectorAll('.theme-toggle-btn').forEach(b => b.innerText = theme === 'dark' ? '☀️ Mode Terang' : '🌙 Mode Malam');
+    document.querySelectorAll('.theme-toggle-btn-mobile').forEach(b => b.innerText = theme === 'dark' ? '☀️' : '🌙');
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+
+applyTheme(localStorage.getItem(THEME_STORAGE_KEY) === 'dark' ? 'dark' : 'light');
+
 const NAMA_BULAN = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 const NAMA_HARI = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', "Jum'at", 'Sabtu'];
 
