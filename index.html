@@ -6,7 +6,7 @@
 <title>Buku Harian Kita 📖</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./css/style.css?v=20260913a">
+<link rel="stylesheet" href="./css/style.css?v=20260913b">
 </head>
 <body>
 
@@ -70,10 +70,13 @@
                 <button class="nav-tab" id="nav-settings" data-label="Pengaturan" onclick="switchTab('settings')"><span class="nav-emoji">⚙️</span> Pengaturan</button>
             </nav>
         </div>
-        <p class="sidebar-footer">
-            <span id="cloud-status" class="cloud-status">☁️ Menghubungkan...</span><br>
-            Data tersinkron otomatis ke pasanganmu secara real-time. 🤍
-        </p>
+        <div>
+            <button class="theme-toggle-btn" id="theme-toggle-btn-desktop" onclick="toggleTheme()">🌙 Mode Malam</button>
+            <p class="sidebar-footer">
+                <span id="cloud-status" class="cloud-status">☁️ Menghubungkan...</span><br>
+                Data tersinkron otomatis ke pasanganmu secara real-time. 🤍
+            </p>
+        </div>
     </aside>
 
     <main id="content-area">
@@ -85,7 +88,10 @@
                 <span class="mobile-brand-icon">💌</span>
                 <span class="mobile-brand-name">Kita</span>
             </div>
-            <span class="mobile-cloud-status" id="mobile-cloud-status" title="Menghubungkan ke cloud...">☁️…</span>
+            <div class="mobile-header-right">
+                <span class="mobile-cloud-status" id="mobile-cloud-status" title="Menghubungkan ke cloud...">☁️…</span>
+                <button class="theme-toggle-btn-mobile" id="theme-toggle-btn-mobile" onclick="toggleTheme()" aria-label="Ganti tema">🌙</button>
+            </div>
         </header>
 
         <!-- DRAWER MENU MOBILE: panel dropdown berisi tab bergaya top bar -->
@@ -140,7 +146,36 @@
             </div>
             <div class="recap-box" id="dash-recap-box"></div>
 
-            <h3 style="margin-bottom:10px;">Catatan Terbaru 📌</h3>
+            <h3 style="margin-bottom:10px;">Quest Hari Ini 🎯</h3>
+            <div class="quest-box" id="dash-quest-box"></div>
+
+            <h3 style="margin:22px 0 10px;">Koleksi Lencana 🏅</h3>
+            <div class="quest-badge-shelf" id="quest-badge-shelf"></div>
+
+            <div class="page-title-row" style="margin-top:22px;">
+                <h3 style="margin:0;">Peta Mood Bulan Ini 🗺️</h3>
+            </div>
+            <div class="torn-panel mood-heatmap-panel">
+                <div class="calendar-nav">
+                    <button onclick="changeMoodCalMonth(-1)">‹</button>
+                    <h4 id="mood-heatmap-label" style="font-size:1.1rem;">-</h4>
+                    <button onclick="changeMoodCalMonth(1)">›</button>
+                </div>
+                <div class="cal-weekdays"><span>M</span><span>S</span><span>S</span><span>R</span><span>K</span><span>J</span><span>S</span></div>
+                <div class="mood-heatmap-grid" id="mood-heatmap-grid"></div>
+                <div class="mood-legend">
+                    <span><i style="background:#c1666b"></i>Sayang</span>
+                    <span><i style="background:#d8a657"></i>Senang</span>
+                    <span><i style="background:#6fae8c"></i>Bahagia</span>
+                    <span><i style="background:#7fb6a3"></i>Hangat</span>
+                    <span><i style="background:#8a93a8"></i>Lelah</span>
+                    <span><i style="background:#9f8fc9"></i>Terharu</span>
+                    <span><i style="background:#d98a4a"></i>Kesal</span>
+                    <span><i style="background:#5b7fa6"></i>Sedih</span>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom:10px;margin-top:22px;">Catatan Terbaru 📌</h3>
             <div class="latest-note" id="dash-latest-entry"></div>
 
             <h3 style="margin:22px 0 10px;">Kutipan Hari Ini 📜</h3>
@@ -275,7 +310,9 @@
                     <div class="settings-field"><label>Tanggal Jadian</label><input id="set-anniversary-date" type="date"></div>
                     <div class="settings-field"><label>Pertanyaan Keamanan</label><input id="set-secret-question" type="text"></div>
                     <div class="settings-field"><label>Ganti Jawaban Kunci</label><input id="set-secret-answer" type="text" placeholder="(kosongkan jika tidak diganti)"></div>
+                    <div class="settings-field"><label>Link Playlist Spotify (opsional)</label><input id="set-spotify-url" type="text" placeholder="https://open.spotify.com/playlist/..."></div>
                 </div>
+                <p class="hint-text-light">🎧 Pastekan link biasa dari tombol "Share" di aplikasi Spotify (playlist/lagu/album) — nanti otomatis muncul sebagai mini player mengambang di pojok layar. Catatan: karena ini pemutar tertanam, ia menampilkan playlist yang sama untuk kalian berdua, bukan status "sedang didengarkan pasangan" secara real-time — dan tombol putar tetap perlu ditekan manual karena browser membatasi audio otomatis.</p>
                 <button class="btn-tape btn-tape-teal" onclick="saveSettings()">💾 Simpan Pengaturan</button>
             </div>
 
@@ -287,6 +324,15 @@
         </section>
 
     </main>
+
+    <!-- PEMUTAR MUSIK BERSAMA: mengambang di pojok bawah, tetap tampil di tab manapun -->
+    <div id="mini-player-wrapper" class="hidden">
+        <div class="mini-player-header">
+            <span>🎧 Playlist Kita</span>
+            <button onclick="toggleMiniPlayer()" id="mini-player-toggle-btn" aria-label="Perkecil/besarkan pemutar">−</button>
+        </div>
+        <iframe id="mini-player-frame" src="" width="100%" height="152" style="border:0;" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Pemutar musik Spotify"></iframe>
+    </div>
 </div>
 
 <!-- ===================== MODALS ===================== -->
@@ -429,13 +475,13 @@
 <!-- SDK Firebase versi stabil (v8) untuk sinkronisasi cloud real-time -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<script src="./js/state.js?v=20260913a"></script>
-<script src="./js/utils.js?v=20260913a"></script>
-<script src="./js/modules/gallery.js?v=20260913a"></script>
-<script src="./js/modules/diary.js?v=20260913a"></script>
-<script src="./js/modules/quiz.js?v=20260913a"></script>
-<script src="./js/modules/poetry.js?v=20260913a"></script>
-<script src="./js/modules/planner.js?v=20260913a"></script>
-<script src="./js/app.js?v=20260913a"></script>
+<script src="./js/state.js?v=20260913b"></script>
+<script src="./js/utils.js?v=20260913b"></script>
+<script src="./js/modules/gallery.js?v=20260913b"></script>
+<script src="./js/modules/diary.js?v=20260913b"></script>
+<script src="./js/modules/quiz.js?v=20260913b"></script>
+<script src="./js/modules/poetry.js?v=20260913b"></script>
+<script src="./js/modules/planner.js?v=20260913b"></script>
+<script src="./js/app.js?v=20260913b"></script>
 </body>
 </html>
