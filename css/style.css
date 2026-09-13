@@ -22,6 +22,12 @@
     --shadow-strong: rgba(46, 42, 36, 0.4);
     --polaroid-bg: #fffdf8;
     --capsule-locked-bg: #e6ddc4;
+    /* Warna teks tetap gelap khusus untuk elemen di atas kertas polaroid,
+       karena kertasnya sengaja TIDAK ikut menggelap di mode malam (supaya
+       tetap terlihat seperti kertas foto asli) — jadi teksnya juga harus
+       tetap gelap, tidak ikut var(--ink) yang berubah terang di mode malam. */
+    --polaroid-ink: #2e2a24;
+    --polaroid-ink-soft: #6b5c47;
     color-scheme: light;
 }
 
@@ -344,8 +350,8 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--teal-seal);
 }
 .polaroid:hover { transform: scale(1.04) rotate(0deg) !important; z-index: 2; }
 .polaroid img { width: 100%; height: 190px; object-fit: cover; display: block; filter: sepia(0.15) contrast(1.02); }
-.polaroid-caption { font-family: 'Caveat', cursive; font-size: 1.15rem; margin: 10px 2px 0; color: var(--ink); line-height: 1.25; }
-.polaroid-date { font-size: 0.62rem; color: var(--ink-soft); display: block; margin-top: 4px; }
+.polaroid-caption { font-family: 'Caveat', cursive; font-size: 1.15rem; margin: 10px 2px 0; color: var(--polaroid-ink); line-height: 1.25; }
+.polaroid-date { font-size: 0.62rem; color: var(--polaroid-ink-soft); display: block; margin-top: 4px; }
 .polaroid-delete {
     position: absolute; top: 6px; right: 6px; width: 22px; height: 22px; border-radius: 50%;
     background: rgba(46,42,36,0.55); color: #fff; font-size: 0.7rem; opacity: 0; transition: opacity 0.15s;
@@ -392,7 +398,7 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--teal-seal);
 .calendar-nav .cal-center button { width: auto; height: auto; background: none; font-size: 0.65rem; color: var(--teal-seal); text-decoration: underline; padding: 0; }
 .cal-weekdays, .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
 .cal-weekdays span { font-size: 0.62rem; text-transform: uppercase; color: var(--ink-soft); padding-bottom: 4px; }
-.cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 0.78rem; background: var(--polaroid-bg); position: relative; }
+.cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 0.78rem; background: var(--paper-cream); position: relative; }
 .cal-day-today { box-shadow: inset 0 0 0 2px var(--teal-seal); }
 .cal-day-event { background: var(--tape-rose); color: #fff; cursor: pointer; font-weight: bold; }
 .cal-dot { position: absolute; bottom: 3px; width: 4px; height: 4px; border-radius: 50%; background: #fff; }
