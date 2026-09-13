@@ -69,6 +69,10 @@ function initApp() {
     renderBucketList();
     renderCalendar();
     renderCapsules();
+    renderDailyQuest();
+    renderQuestBadges();
+    renderMoodHeatmap();
+    renderMusicPlayer();
     fillSettingsForm();
 }
 
@@ -266,6 +270,7 @@ function fillSettingsForm() {
     document.getElementById('set-secret-question').value = s.secretQuestion;
     document.getElementById('set-secret-answer').value = '';
     document.getElementById('set-secret-answer').placeholder = '(kosongkan jika tidak diganti)';
+    document.getElementById('set-spotify-url').value = s.spotifyEmbedUrl || '';
 }
 
 function saveSettings() {
@@ -276,6 +281,7 @@ function saveSettings() {
     s.partnerCity = document.getElementById('set-partner-city').value.trim() || s.partnerCity;
     s.anniversaryDate = document.getElementById('set-anniversary-date').value || s.anniversaryDate;
     s.secretQuestion = document.getElementById('set-secret-question').value.trim() || s.secretQuestion;
+    s.spotifyEmbedUrl = document.getElementById('set-spotify-url').value.trim();
 
     const newAnswer = document.getElementById('set-secret-answer').value.trim();
     if (newAnswer) s.secretAnswer = newAnswer.toLowerCase();
@@ -286,6 +292,7 @@ function saveSettings() {
     localStorage.setItem(SESSION_LAST_ANSWER_KEY, s.secretAnswer.toLowerCase());
     injectRoleLabels();
     renderDashboard();
+    renderMusicPlayer();
     showToast('Tersimpan 📌', 'Pengaturan buku harian sudah diperbarui & disinkronkan ke cloud.');
     fillSettingsForm();
 }
@@ -298,6 +305,191 @@ function lucideReplace() {
 function exportToPDF() {
     showToast('Menyiapkan PDF 📕', 'Membuka dialog cetak / simpan sebagai PDF...');
     setTimeout(() => window.print(), 350);
+}
+
+// ---------- QUEST HARIAN (Gamifikasi Ringan) ----------
+const QUEST_POOL = [
+    'Kirim foto langit yang kalian lihat hari ini',
+    'Tulis 3 hal kecil yang bikin kamu tersenyum hari ini',
+    'Kasih satu tebak-tebakan receh ke pasanganmu',
+    'Ceritakan satu kenangan lucu dari minggu ini',
+    'Kirim pesan suara bilang "aku sayang kamu" dengan gaya paling konyol',
+    'Sebutkan satu hal yang kamu kagumi dari pasanganmu hari ini',
+    'Ajak pasanganmu ngobrol 5 menit tanpa pegang HP',
+    'Tulis satu doa atau harapan kecil untuk pasanganmu',
+    'Kirim lagu yang lagi kamu dengerin sekarang',
+    'Ceritakan mimpi paling aneh yang pernah kamu alami',
+    'Kasih pujian random ke pasanganmu sekarang juga',
+    'Ajak coba masak atau pesan makanan yang belum pernah dicoba bareng',
+    'Tulis satu hal yang ingin kalian lakukan bareng bulan ini',
+    'Foto sesuatu di sekitarmu yang mengingatkan ke pasanganmu hari ini',
+    'Kirim pesan "terima kasih untuk..." dan lengkapi sendiri'
+];
+
+function hashDateForQuest(dateKey) {
+    let hash = 0;
+    for (let i = 0; i < dateKey.length; i++) {
+        hash = (hash * 31 + dateKey.charCodeAt(i)) >>> 0;
+    }
+    return hash;
+}
+
+function getTodayQuestText() {
+    const key = toLocalDateKey(new Date());
+    const idx = hashDateForQuest(key) % QUEST_POOL.length;
+    return QUEST_POOL[idx];
+}
+
+function renderDailyQuest() {
+    const box = document.getElementById('dash-quest-box');
+    if (!box) return;
+
+    const todayKey = toLocalDateKey(new Date());
+    const questText = getTodayQuestText();
+    const progress = (appState.questProgress && appState.questProgress[todayKey]) || [];
+    const p = getProfiles();
+    const myDone = progress.includes(p.myRole);
+    const partnerDone = progress.includes(p.partnerRole);
+    const bothDone = myDone && partnerDone;
+
+    box.innerHTML = `
+        <p class="quest-text">${escapeHtml(questText)}</p>
+        <div class="quest-status-row">
+            <span class="quest-status-chip ${myDone ? 'quest-done' : ''}">${escapeHtml(p.myName)}: ${myDone ? '✅ Selesai' : '⏳ Belum'}</span>
+            <span class="quest-status-chip ${partnerDone ? 'quest-done' : ''}">${escapeHtml(p.partnerName)}: ${partnerDone ? '✅ Selesai' : '⏳ Belum'}</span>
+        </div>
+        ${bothDone
+            ? `<p class="quest-badge-earned">🏅 Lencana harian didapat! Kompak banget hari ini.</p>`
+            : myDone
+                ? `<p class="quest-waiting">Menunggu ${escapeHtml(p.partnerName)} menyelesaikan quest juga...</p>`
+                : `<button class="btn-tape btn-tape-teal" onclick="completeTodayQuest()">Selesaikan Quest Ini</button>`
+        }
+    `;
+}
+
+function completeTodayQuest() {
+    const todayKey = toLocalDateKey(new Date());
+    appState.questProgress = appState.questProgress || {};
+    const list = appState.questProgress[todayKey] || [];
+    const role = getMyRole();
+    if (!list.includes(role)) list.push(role);
+    appState.questProgress[todayKey] = list;
+
+    if (list.length === 2) {
+        appState.questBadges = appState.questBadges || [];
+        if (!appState.questBadges.some(b => b.date === todayKey)) {
+            appState.questBadges.push({ date: todayKey, quest: getTodayQuestText() });
+        }
+    }
+
+    saveState();
+    renderDailyQuest();
+    renderQuestBadges();
+    showToast('Quest Selesai! 🎯', 'Progress harian kalian tersimpan.');
+}
+
+function renderQuestBadges() {
+    const container = document.getElementById('quest-badge-shelf');
+    if (!container) return;
+    const badges = [...(appState.questBadges || [])].sort((a, b) => b.date.localeCompare(a.date));
+    if (badges.length === 0) {
+        container.innerHTML = `<p class="empty-note">Belum ada lencana. Selesaikan quest harian berdua untuk dapat lencana pertama!</p>`;
+        return;
+    }
+    container.innerHTML = badges.slice(0, 14).map(b =>
+        `<div class="quest-badge-chip" title="${escapeHtml(b.quest)}">🏅<span>${formatTanggalSingkat(b.date)}</span></div>`
+    ).join('');
+}
+
+// ---------- HEATMAP MOOD BULANAN ----------
+const MOOD_COLOR_MAP = {
+    '🥰': '#c1666b',
+    '🎉': '#d8a657',
+    '😊': '#6fae8c',
+    '🤗': '#7fb6a3',
+    '😴': '#8a93a8',
+    '🥺': '#9f8fc9',
+    '😤': '#d98a4a',
+    '😭': '#5b7fa6'
+};
+
+let moodCalYear = new Date().getFullYear();
+let moodCalMonth = new Date().getMonth();
+
+function changeMoodCalMonth(delta) {
+    moodCalMonth += delta;
+    if (moodCalMonth > 11) { moodCalMonth = 0; moodCalYear++; }
+    else if (moodCalMonth < 0) { moodCalMonth = 11; moodCalYear--; }
+    renderMoodHeatmap();
+}
+
+function renderMoodHeatmap() {
+    const grid = document.getElementById('mood-heatmap-grid');
+    const label = document.getElementById('mood-heatmap-label');
+    if (!grid) return;
+    grid.innerHTML = '';
+    label.innerText = `${NAMA_BULAN[moodCalMonth]} ${moodCalYear}`;
+
+    // Kalau ada lebih dari satu entry di tanggal yang sama, pakai yang paling terakhir ditulis
+    const moodByDate = {};
+    [...appState.diaryEntries].sort((a, b) => a.id - b.id).forEach(e => { moodByDate[e.date] = e.mood; });
+
+    const firstDay = new Date(moodCalYear, moodCalMonth, 1).getDay();
+    const daysInMonth = new Date(moodCalYear, moodCalMonth + 1, 0).getDate();
+
+    for (let i = 0; i < firstDay; i++) grid.appendChild(document.createElement('div'));
+
+    for (let d = 1; d <= daysInMonth; d++) {
+        const dateKey = toLocalDateKey(new Date(moodCalYear, moodCalMonth, d));
+        const mood = moodByDate[dateKey];
+        const cell = document.createElement('div');
+        cell.className = 'mood-cell';
+        if (mood) {
+            cell.style.background = MOOD_COLOR_MAP[mood] || 'var(--paper-cream-dark)';
+            cell.title = `${dateKey}: ${mood}`;
+        } else {
+            cell.title = dateKey;
+        }
+        cell.innerText = d;
+        grid.appendChild(cell);
+    }
+}
+
+// ---------- PEMUTAR MUSIK BERSAMA (Spotify Embed) ----------
+function toSpotifyEmbedUrl(url) {
+    if (!url) return '';
+    const clean = url.trim().split('?')[0];
+    if (!/^https:\/\/open\.spotify\.com\//i.test(clean)) return '';
+    if (clean.includes('/embed/')) return clean;
+    return clean.replace('open.spotify.com/', 'open.spotify.com/embed/');
+}
+
+function renderMusicPlayer() {
+    const wrapper = document.getElementById('mini-player-wrapper');
+    const frame = document.getElementById('mini-player-frame');
+    if (!wrapper || !frame) return;
+
+    const embedUrl = toSpotifyEmbedUrl(appState.settings.spotifyEmbedUrl);
+    if (!embedUrl) {
+        wrapper.classList.add('hidden');
+        return;
+    }
+    wrapper.classList.remove('hidden');
+    if (frame.getAttribute('data-src') !== embedUrl) {
+        frame.src = embedUrl;
+        frame.setAttribute('data-src', embedUrl);
+    }
+
+    const collapsed = localStorage.getItem('buku_harian_player_hidden') === 'true';
+    wrapper.classList.toggle('mini-player-collapsed', collapsed);
+    document.getElementById('mini-player-toggle-btn').innerText = collapsed ? '+' : '−';
+}
+
+function toggleMiniPlayer() {
+    const wrapper = document.getElementById('mini-player-wrapper');
+    const collapsed = wrapper.classList.toggle('mini-player-collapsed');
+    localStorage.setItem('buku_harian_player_hidden', collapsed ? 'true' : 'false');
+    document.getElementById('mini-player-toggle-btn').innerText = collapsed ? '+' : '−';
 }
 
 // ---------- BOOT ----------
