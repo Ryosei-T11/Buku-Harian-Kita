@@ -30,7 +30,8 @@ let appState = {
         partnerTimezone: 'Asia/Manado',
         anniversaryDate: '2026-07-22',
         secretQuestion: 'Selain Lapkot, dimana biasanya kita duduk menghabiskan waktu?',
-        secretAnswer: 'mogolaing'
+        secretAnswer: 'mogolaing',
+        spotifyEmbedUrl: ''
     },
     polaroids: [
         { id: 1, img: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=600', caption: 'Hari itu, langit sore jadi saksi.', date: '2026-06-10', tape: 'rose' },
@@ -70,7 +71,9 @@ let appState = {
             content: 'Di setiap baris yang kutulis,\nada namamu yang terselip diam-diam.\nBuku ini bukan cuma kertas,\ntapi rumah kecil untuk kita berdua.',
             tags: ['awal']
         }
-    ]
+    ],
+    questProgress: {},
+    questBadges: []
 };
 
 // Menandai apakah data masih 100% bawaan (dipakai untuk deteksi konflik pemulihan data)
@@ -92,6 +95,9 @@ function normalizeState(data) {
     data.calendarEvents = Array.isArray(data.calendarEvents) ? data.calendarEvents : [];
     data.quizAnswers = Array.isArray(data.quizAnswers) ? data.quizAnswers : [];
     data.poems = Array.isArray(data.poems) ? data.poems : [];
+    data.questProgress = (data.questProgress && typeof data.questProgress === 'object' && !Array.isArray(data.questProgress)) ? data.questProgress : {};
+    data.questBadges = Array.isArray(data.questBadges) ? data.questBadges : [];
+    if (!data.settings.spotifyEmbedUrl) data.settings.spotifyEmbedUrl = '';
     return data;
 }
 
