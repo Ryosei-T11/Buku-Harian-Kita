@@ -20,6 +20,30 @@
     --teal-seal-dark: #2f5548;
     --shadow-soft: rgba(46, 42, 36, 0.22);
     --shadow-strong: rgba(46, 42, 36, 0.4);
+    --polaroid-bg: #fffdf8;
+    --capsule-locked-bg: #e6ddc4;
+    color-scheme: light;
+}
+
+/* ---------- TEMA MALAM (Dark Mode) ---------- */
+[data-theme="dark"] {
+    --paper-kraft: #26201b;
+    --paper-kraft-dark: #1a1512;
+    --paper-cream: #3a322a;
+    --paper-cream-dark: #2e2721;
+    --ink: #ece0cc;
+    --ink-soft: #b3a689;
+    --tape-rose: #c1666b;
+    --tape-rose-dark: #a1565a;
+    --tape-mustard: #d8a657;
+    --tape-mustard-dark: #b3873f;
+    --teal-seal: #5b9683;
+    --teal-seal-dark: #427a68;
+    --shadow-soft: rgba(0, 0, 0, 0.4);
+    --shadow-strong: rgba(0, 0, 0, 0.6);
+    --polaroid-bg: #ece3d1;
+    --capsule-locked-bg: #211c17;
+    color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -243,6 +267,14 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--teal-seal);
 .mobile-brand-name { font-family: 'Caveat', cursive; font-weight: 700; font-size: 1.25rem; color: #fdf5e4; }
 .mobile-cloud-status { font-size: 0.85rem; color: #9fd6bd; }
 .mobile-cloud-status.cloud-status-off { color: #d8a657; }
+.mobile-header-right { display: flex; align-items: center; gap: 10px; }
+.theme-toggle-btn-mobile { font-size: 1.1rem; color: #fdf5e4; line-height: 1; }
+.theme-toggle-btn {
+    display: block; width: 100%; text-align: center;
+    background: rgba(255,255,255,0.06); color: #d8c6a3;
+    font-size: 0.72rem; padding: 9px; border-radius: 6px; margin-bottom: 12px;
+}
+.theme-toggle-btn:hover { background: rgba(255,255,255,0.1); }
 
 .mobile-menu-panel {
     display: none; /* dibuka lewat class mobile-menu-open */
@@ -306,7 +338,7 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--teal-seal);
 /* ---------- POLAROID WALL ---------- */
 .polaroid-wall { display: flex; flex-wrap: wrap; gap: 26px; padding: 10px 4px 30px; }
 .polaroid {
-    background: #fffdf8; width: 190px; padding: 12px 12px 16px; border-radius: 3px;
+    background: var(--polaroid-bg); width: 190px; padding: 12px 12px 16px; border-radius: 3px;
     box-shadow: 0 10px 20px var(--shadow-strong);
     position: relative; transition: transform 0.2s ease;
 }
@@ -360,7 +392,7 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--teal-seal);
 .calendar-nav .cal-center button { width: auto; height: auto; background: none; font-size: 0.65rem; color: var(--teal-seal); text-decoration: underline; padding: 0; }
 .cal-weekdays, .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
 .cal-weekdays span { font-size: 0.62rem; text-transform: uppercase; color: var(--ink-soft); padding-bottom: 4px; }
-.cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 0.78rem; background: #fffdf8; position: relative; }
+.cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 0.78rem; background: var(--polaroid-bg); position: relative; }
 .cal-day-today { box-shadow: inset 0 0 0 2px var(--teal-seal); }
 .cal-day-event { background: var(--tape-rose); color: #fff; cursor: pointer; font-weight: bold; }
 .cal-dot { position: absolute; bottom: 3px; width: 4px; height: 4px; border-radius: 50%; background: #fff; }
@@ -373,7 +405,7 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--teal-seal);
 /* ---------- CAPSULE LETTERS ---------- */
 .capsule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
 .capsule-card { background: var(--paper-cream); border-radius: 8px; padding: 16px; box-shadow: 0 6px 14px var(--shadow-soft); display: flex; flex-direction: column; justify-content: space-between; min-height: 190px; }
-.capsule-locked { background: #e6ddc4; }
+.capsule-locked { background: var(--capsule-locked-bg); }
 .capsule-head { display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--ink-soft); margin-bottom: 10px; }
 .capsule-seal { text-align: center; padding: 18px 0; font-size: 1.8rem; color: var(--ink-soft); }
 .capsule-seal p { font-size: 0.7rem; margin-top: 4px; }
@@ -525,7 +557,7 @@ input[type="file"] { padding: 8px; font-size: 0.75rem; }
 /* ---------- EKSPOR PDF (tampilan saat dicetak/disimpan sebagai PDF) ---------- */
 @media print {
     #sidebar, .mobile-header, .mobile-menu-panel, .modal-overlay, #toast-container, #boot-loading,
-    .btn-tape, .btn-cancel, .btn-small, .btn-disabled,
+    .btn-tape, .btn-cancel, .btn-small, .btn-disabled, #mini-player-wrapper,
     .polaroid-delete, .diary-delete, .poem-delete, .bucket-delete, .capsule-delete, .quiz-delete, .quiz-edit-btn,
     .tag-filter-bar, .search-input-bar, .reaction-bar, .subtab-row, .recap-period-row,
     .quiz-answer-form, .confetti-container, .calendar-nav,
@@ -539,4 +571,45 @@ input[type="file"] { padding: 8px; font-size: 0.75rem; }
         box-shadow: none !important; border: 1px solid #ddd; break-inside: avoid;
     }
     .polaroid { transform: none !important; }
+}
+
+/* ---------- QUEST HARIAN ---------- */
+.quest-box { background: var(--paper-cream); border-radius: 8px; padding: 18px; box-shadow: 0 6px 16px var(--shadow-soft); margin-bottom: 22px; }
+.quest-text { font-family: 'Caveat', cursive; font-size: 1.4rem; margin: 0 0 12px; }
+.quest-status-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.quest-status-chip { font-size: 0.7rem; padding: 5px 12px; border-radius: 12px; background: var(--paper-cream-dark); color: var(--ink-soft); }
+.quest-status-chip.quest-done { background: var(--teal-seal); color: #fdf5e4; }
+.quest-badge-earned { font-family: 'Caveat', cursive; font-size: 1.15rem; color: var(--teal-seal); margin: 0; }
+.quest-waiting { font-size: 0.75rem; color: var(--ink-soft); font-style: italic; margin: 0; }
+.quest-badge-shelf { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; }
+.quest-badge-chip { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 1.4rem; background: var(--paper-cream); border-radius: 8px; padding: 10px 12px; box-shadow: 0 4px 10px var(--shadow-soft); }
+.quest-badge-chip span { font-size: 0.6rem; color: var(--ink-soft); font-family: 'Special Elite', monospace; }
+
+/* ---------- HEATMAP MOOD ---------- */
+.mood-heatmap-panel { margin-bottom: 22px; }
+.mood-heatmap-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 6px; }
+.mood-cell { aspect-ratio: 1; border-radius: 6px; background: var(--paper-cream-dark); display: flex; align-items: center; justify-content: center; font-size: 0.68rem; color: rgba(0,0,0,0.35); }
+[data-theme="dark"] .mood-cell { color: rgba(255,255,255,0.35); }
+.mood-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.mood-legend span { display: flex; align-items: center; gap: 5px; font-size: 0.62rem; color: var(--ink-soft); }
+.mood-legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+
+/* ---------- MINI PLAYER (Spotify) ---------- */
+#mini-player-wrapper {
+    position: fixed; bottom: 16px; right: 16px; z-index: 45;
+    width: 300px; max-width: calc(100vw - 24px);
+    background: var(--paper-cream); border-radius: 10px;
+    box-shadow: 0 12px 26px rgba(0,0,0,0.35);
+    overflow: hidden;
+}
+.mini-player-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 12px; font-size: 0.75rem; font-weight: bold;
+    background: linear-gradient(135deg, var(--teal-seal), var(--teal-seal-dark)); color: #fdf5e4;
+}
+.mini-player-header button { color: #fdf5e4; font-size: 1.1rem; line-height: 1; padding: 0 4px; }
+#mini-player-frame { display: block; }
+#mini-player-wrapper.mini-player-collapsed #mini-player-frame { display: none; }
+@media (max-width: 480px) {
+    #mini-player-wrapper { right: 10px; bottom: 10px; width: 260px; }
 }
