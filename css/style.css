@@ -443,6 +443,7 @@ input[type="file"] { padding: 8px; font-size: 0.75rem; }
 .quiz-match-yes { color: var(--teal-seal); }
 .quiz-match-no { color: var(--tape-rose-dark); }
 .quiz-edit-btn { font-size: 0.65rem; color: var(--ink-soft); text-decoration: underline; margin-top: 4px; }
+.quiz-agree-btn { font-size: 0.72rem; padding: 7px 14px; border-radius: 6px; background: var(--teal-seal); color: #fdf5e4; margin: 2px 8px 4px 0; }
 
 /* ---------- PUISI KITA ---------- */
 .poem-list { display: flex; flex-direction: column; gap: 18px; }
