@@ -19,7 +19,7 @@ function renderPoems() {
     }
 
     const p = getProfiles();
-    let sorted = [...appState.poems].sort((a, b) => b.date.localeCompare(a.date));
+    let sorted = [...appState.poems].sort((a, b) => b.date.localeCompare(a.date) || (Number(b.id) - Number(a.id)));
     if (poemActiveTag) {
         sorted = sorted.filter(poem => (poem.tags || []).includes(poemActiveTag));
     }
