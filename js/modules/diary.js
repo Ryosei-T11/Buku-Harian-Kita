@@ -20,7 +20,7 @@ function renderDiary() {
     }
 
     const p = getProfiles();
-    let sorted = [...appState.diaryEntries].sort((a, b) => b.date.localeCompare(a.date));
+    let sorted = [...appState.diaryEntries].sort((a, b) => b.date.localeCompare(a.date) || (Number(b.id) - Number(a.id)));
     if (diaryActiveTag) {
         sorted = sorted.filter(e => (e.tags || []).includes(diaryActiveTag));
     }
